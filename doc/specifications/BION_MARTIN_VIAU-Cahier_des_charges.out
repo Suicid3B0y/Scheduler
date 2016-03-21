@@ -1,0 +1,16 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Features description}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{What will be implemented?}{section.2}% 3
+\BOOKMARK [3][-]{subsubsection.2.1.1}{Job Queue management}{subsection.2.1}% 4
+\BOOKMARK [3][-]{subsubsection.2.1.2}{Multiple versions}{subsection.2.1}% 5
+\BOOKMARK [2][-]{subsection.2.2}{Gantt chart}{section.2}% 6
+\BOOKMARK [1][-]{section.3}{Job Queue implementation details}{}% 7
+\BOOKMARK [2][-]{subsection.3.1}{Job parameters}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.2}{Job Queue parameters}{section.3}% 9
+\BOOKMARK [2][-]{subsection.3.3}{Dynamic feed of the Job Queue using schedclt}{section.3}% 10
+\BOOKMARK [1][-]{section.4}{Scheduling strategy}{}% 11
+\BOOKMARK [2][-]{subsection.4.1}{Scheduling method description}{section.4}% 12
+\BOOKMARK [3][-]{subsubsection.4.1.1}{Overall description}{subsection.4.1}% 13
+\BOOKMARK [3][-]{subsubsection.4.1.2}{Time slice}{subsection.4.1}% 14
+\BOOKMARK [2][-]{subsection.4.2}{Example of scheduling with our strategy}{section.4}% 15
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 16
