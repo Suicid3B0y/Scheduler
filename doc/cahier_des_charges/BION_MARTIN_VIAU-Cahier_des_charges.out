@@ -7,8 +7,10 @@
 \BOOKMARK [1][-]{section.3}{Job Queue implementation details}{}% 7
 \BOOKMARK [2][-]{subsection.3.1}{Job parameters}{section.3}% 8
 \BOOKMARK [2][-]{subsection.3.2}{Job Queue parameters}{section.3}% 9
-\BOOKMARK [2][-]{subsection.3.3}{Dynamic feed of the Job Queue using jobctl}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.3}{Dynamic feed of the Job Queue using schedclt}{section.3}% 10
 \BOOKMARK [1][-]{section.4}{Scheduling strategy}{}% 11
 \BOOKMARK [2][-]{subsection.4.1}{Scheduling method description}{section.4}% 12
-\BOOKMARK [2][-]{subsection.4.2}{Example of scheduling with our strategy}{section.4}% 13
-\BOOKMARK [1][-]{section.5}{Conclusion}{}% 14
+\BOOKMARK [3][-]{subsubsection.4.1.1}{Overall description}{subsection.4.1}% 13
+\BOOKMARK [3][-]{subsubsection.4.1.2}{Time slice}{subsection.4.1}% 14
+\BOOKMARK [2][-]{subsection.4.2}{Example of scheduling with our strategy}{section.4}% 15
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 16

@@ -42,8 +42,6 @@
 % hauteur du pied de page
 % distance entre le texte et le pied de page
 
-\setcounter{secnumdepth}{3}
-
 \pagestyle{fancy}
 \fancyhead[L]{Projet GSI - Cahier des charges - 2016}
 \fancyhead[R]{\leftmark}
@@ -139,7 +137,7 @@
 \section{Introduction}
 
 As part of our Parallel Programming and Network courses, we are asked to develop a job scheduler. This document is the specifications of this project.\\
-A scheduler is used to assign a job --- processes, threads, etc. --- to the machine hardware resources such as processors. All Operating Systems works with its own scheduler in order to give the user the impression of fluidity even if tons of process are working \textit{"at the same time"}.\\
+A scheduler is used to assign a job --- processes, threads, etc. --- to machine hardware resources such as processors. All Operating Systems works with its own scheduler in order to give the user the impression of fluidity even if tons of process are working \textit{"at the same time"}.\\
 First, we will present the features of our program. Then we will elaborate on the Queue management and finally we will develop on our chosen scheduling strategy.
 
 \newpage
@@ -154,18 +152,18 @@ A job will be a program launch by a command line. The latter will be given to ou
 
 \subsubsection{Job Queue management}
 
-A path to a file that contains all jobs information will be provide to our scheduler at start-up. All jobs included in this file will be processed by our scheduler.\\ However, we will provide a tool to interact with the scheduler to add new job on the fly\footnote{See our Job Queue implementation details for more information: \ref{jobctl_implementation}}.
+A path --- to a file that contains all jobs information --- will be provide to our scheduler at start-up. All jobs included in this file will be processed by our scheduler.\\ However, we will provide a tool to interact with the scheduler to add new job on the fly\footnote{See our Job Queue implementation details for more information: \ref{schedclt_implementation}}.
 Jobs will be feed into the Job Queue regardless of the way it have been added and be processed by our program.
 
 \subsubsection{Multiple versions}
 
-First, we will develop a sequential management of our Job Queue, each job will be processed one by one and assigned to available resources according to their priorities\footnote{See our Scheduling Method for more information: \ref{scheduling_strategy}}.\\
-Then, we will provided a parallel version of our program to improve our Queue management and processing onto multiple cores of our processor with "OpenMP" library.\\
-Finally, we will distribute the last version to a cluster of machine in order to make our program scalable with "MPI" library.
+First, we will develop a sequential management of our Job Queue, each job will be processed one by one and assigned to available resources according to their priorities\footnote{See our Scheduling Strategy for more information: \ref{scheduling_strategy}}.\\
+Then, we will provided a parallel version of our program to improve our Queue management and processing onto multiple cores of our processor with the "OpenMP" library.\\
+Finally, we will distribute the last version to a cluster of machine in order to make our program scalable with the "MPI" library.
 
 \subsection{Gantt chart}
 
-\todo{compléter diagramme de Fantt}
+\todo{compléter diagramme de Gantt}
 \todo{Intégrer Gantt}
 
 
@@ -178,58 +176,54 @@ Finally, we will distribute the last version to a cluster of machine in order to
 A job will eventually have different properties --- this list is not exhaustive and may differ at the end --- provided by the user:
 
 \begin{itemize}
-\item Burst time [required]
-\item Priority
+\item Burst time: the time the job will use for the CPU to compute the job \textbf{[required]}
+\item Priority: for example it could be implemented as an integer, highest priority to the lowest integer
 \item RAM and CPU load
 \end{itemize}
-
-\todo{explainations}
 
 \subsection{Job Queue parameters}
 
 Despite the fact that our program could work perfectly with default values and use the best for the system, the Job Queue itself can have optional properties. These properties will be provided by the user:
 \begin{itemize}
-\item \texttt{Timeout}: the time after which the application will kill the job, by default there is no timeout and no job will be killed
+\item \texttt{Timeout}: the time after which the application will kill the job, if set to 0 there would be no timeout and no job would be killed
 \item \texttt{Number of cores}: the number of processors the scheduler can send jobs to, by default it uses different values, depending on the version of the scheduler. In the sequential version it could not be modified and will be set to 1. In the parallel and distributed version it will match the number of available processors.
-\item \texttt{Time Slice}: if set to \texttt{0}, there will be no time slice and the scheduler will be non-preemptive\footnote{See our Scheduling Method for more information: \ref{scheduling_strategy}}.
+\item \texttt{Time Slice}: if set to \texttt{0}, there would be no time slice and the scheduler would be non-preemptive\footnote{See our Scheduling Strategy for more information: \ref{scheduling_strategy}}.
 \end{itemize}
 
-\subsection{Dynamic feed of the Job Queue using \texttt{jobctl}}\label{jobctl_implementation}
+\subsection{Dynamic feed of the Job Queue using \texttt{schedclt}}\label{schedclt_implementation}
 
-A tool, \texttt{jobctl}, will be developed in order to interact with the scheduler. This tool will take as parameters the same information required to launch a job. It will then send a \texttt{SIGUSR1} signal to the scheduler, announcing the latter that it needs to reload its job queue. You can see an illustrated version of this routine on Figure \ref{jobctl_implementation_png}. \texttt{jobctl} will also allow the user to see the current state of the processors --- i.e. which job run on this processor.\\
-The first implementation will use a swap file in order to add the jobs to the scheduler in real time. The swap file used for the job description and the communication between the client and the scheduler should not be edited by the user.\\
-We may lately design a complete API in the scheduler daemon for retrieving or sending other informations such as the cores numbers in the cluster, parametrize the cluster or even remove process.
+A tool \texttt{schedclt} --- for scheduler client --- will be developed in order to interact with the scheduler. This tool will take as parameters the same information required to launch a job. Then, it will send a \texttt{SIGUSR1} signal to the scheduler, announcing the latter that it needs to reload its job queue. You can see an illustrated version of this routine on Figure \ref{schedclt_implementation_png}. \texttt{schedclt} will also allow the user to see the current state of the processors --- i.e. which job run on this processor.
+
+\paragraph{Implementation}
+The first implementation will use a swap file in order to add jobs to the scheduler's Job Queue in real time. The swap file used for the job description and the communication between the client and the scheduler \textbf{should not} be edited by the user.\\
+We may lately design a complete API in the scheduler daemon for retrieving or sending other information such as the cores numbers in the cluster, parametrize the cluster or even remove process.
 
 \begin{center}
-\begin{figure}[h]
+\begin{figure}[ht]
 \includegraphics[width=1\linewidth]{images/use_case.png}
 \caption{Chart of our Queue implementation.}
-\label{jobctl_implementation_png}
+\label{schedclt_implementation_png}
 \end{figure}
 \end{center}
 
+\clearpage
 
 \section{Scheduling strategy}\label{scheduling_strategy}
 
 \subsection{Scheduling method description}
 
-\todo{read and mistakes !}
+There are many methods and as many algorithms to achieve scheduling. We chose the method that prioritize the shortest burst time programs to make the Operating System more dynamic and provide the best user experience.
+This method is used by the majority of Operating Systems, as Windows and UNIX systems (Mac, Linux distributions).
 
-There are many methods and as many algorithms to achieve scheduling. We chose the fastest method but the most complex to imagine, this is the method used by the majority of Operating Systems, as Windows and UNIX systems (Mac, Linux ..).
+\subsubsection{Overall description}
 
-This method named Fixed-priority pre-emptive scheduling will always execute the job with the highest priority to ensure that the user can have what he wants first. A job not being prioritized by the user will have a 'default' priority. 
-In the case where there are no jobs prioritized and several 'default' priority jobs, the first job that will be executed is the one with the shortest 'burst time' --- the time the job will use for the CPU to compute the job --- to ensure the velocity of the method. 
-We will also implement the concept of 'aging' priority too. A process will not wait forever in an infinite loop as the time elapsed since job's declaration will raise the job's priority. For instance, a job with 'default' priority, a burst time of 600ms which was declared for 10s, will be run \textbf{before} a job with 'default' priority, a burst time of 550ms which was declared for 4s.
+This method named \textbf{Fixed-priority pre-emptive scheduling} will always execute the job with the highest priority to ensure that the user can have what he wants first. A job not being prioritized by the user will have a \textit{default priority}. 
+In the case where there are no prioritized jobs and several default priority jobs, the first job that will be executed is the one with the shortest \textit{burst time} --- the time the job will use for the CPU to compute the job --- to ensure the velocity of the method. 
+We will also implement the concept of \textit{aging} priority too. A process will not wait forever in an infinite loop. Indeed, the time elapsed since the job's declaration will raise its priority. For instance, a job with default priority, a burst time of 600ms which was declared for 10s, will be run \textbf{before} a job with default priority, a burst time of 550ms which was declared for 4s.
 
+\subsubsection{Time slice}
 
-Moreover, the concept of 'time slice' is used in this method too. It means that a job will not hog the processor for a time longer than the 'time slice'. When a job is being runned by the scheduler, it can be suspended if a job with higher priority comes in, it will be resumed after the termination of the job with higher priority. Indeed, this 'priority race' is checked each 'time slice'. It can be turned off to become a Fixed-priority non-preemptive scheduling, but the pre-emptive method is the one we will use to ensure different jobs can be executed “simultaneously”.
-
-
-There will be 3 different versions of the application's scheduler, the 3 of them will be available through options.
-The 'Sequential', the most basic one, which only allow scheduling on 1 processor
-The 'OpenMP', the multi-processors one, which allow using more than 1 processor to start jobs simultaneously
-The 'MPI', the scheduler based on clusters, with many processors available on different machines
-
+The \textit{time slice} concept is used in this method too. It means that a job will not hog the processor for a time longer than a time slice. A job can be suspended if a job with higher priority comes in and will be resumed after the termination of the latter. Actually, this \textit{priority race} is checked each time slice. It can be turned off to become a Fixed-priority non-preemptive scheduling, but the pre-emptive method is the one we will use to ensure different jobs can be executed \textit{“simultaneously”}.
 
 \subsection{Example of scheduling with our strategy}
 
@@ -243,19 +237,18 @@ The following chart (Figure \ref{scheduling_example}) shows how processes are as
 \end{itemize}
 
 \begin{center}
-\begin{figure}[h]
+\begin{figure}[ht]
 \includegraphics[width=1\linewidth]{images/scheduler_example.png}
 \caption{Example of scheduling following our strategy.}
 \label{scheduling_example}
 \end{figure}
 \end{center}
 
-%C'est bon, mais fais gaffe parce que C c'est limite, normalement D devrait passer avant, si le Burst Time est plus petit, on prend celui-là, même si l'autre est en WAITING, donc logiquement on devrait prendre D, sauf que là il est là depuis plus longtemps, donc avec le aging, sa priorité monte un peu + une partie de son burst time a viré, donc C passe avant D mais c'est limite
-\newpage
+\clearpage
 
 \section{Conclusion}
 
-\todo{formuler}
+Among all strategy, we prefer to focus our strategy on the user needs and experience as we empirically know that an good application is the one loved by its users. We hope this approach suit you and will provide all our knowledge to produce the best result we could achieve.
 
 \newpage
 

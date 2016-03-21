@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.2.2)  21 MAR 2016 13:51
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.2.2)  21 MAR 2016 20:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -742,28 +742,28 @@ Package: vmargin 2004/07/15 V2.5 set document margins (VK)
 (./BION_MARTIN_VIAU-Cahier_des_charges.aux)
 \openout1 = `BION_MARTIN_VIAU-Cahier_des_charges.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 104.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 104.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 102.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 102.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 104.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 104.
-LaTeX Font Info:    ... okay on input line 104.
+LaTeX Font Info:    ... okay on input line 102.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 102.
+LaTeX Font Info:    ... okay on input line 102.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -797,7 +797,7 @@ e
 File: ucsencs.def 2011/01/21 Fixes to fontencodings LGR, T3
 )
 \AtBeginShipoutBox=\box57
-Package hyperref Info: Link coloring OFF on input line 104.
+Package hyperref Info: Link coloring OFF on input line 102.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -807,9 +807,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count127
 )
-LaTeX Info: Redefining \ref on input line 104.
-LaTeX Info: Redefining \pageref on input line 104.
-LaTeX Info: Redefining \nameref on input line 104.
+LaTeX Info: Redefining \ref on input line 102.
+LaTeX Info: Redefining \pageref on input line 102.
+LaTeX Info: Redefining \nameref on input line 102.
 
 (./BION_MARTIN_VIAU-Cahier_des_charges.out)
 (./BION_MARTIN_VIAU-Cahier_des_charges.out)
@@ -818,11 +818,11 @@ LaTeX Info: Redefining \nameref on input line 104.
 
 \c@lstlisting=\count128
 
-<images/Logo_EISTI.jpg, id=60, 45.5301pt x 65.043pt>
+<images/Logo_EISTI.jpg, id=68, 45.5301pt x 65.043pt>
 File: images/Logo_EISTI.jpg Graphic file (type jpg)
 
 <use images/Logo_EISTI.jpg>
-Package pdftex.def Info: images/Logo_EISTI.jpg used on input line 111.
+Package pdftex.def Info: images/Logo_EISTI.jpg used on input line 109.
 (pdftex.def)             Requested size: 45.52998pt x 65.04283pt.
  [1
 
@@ -846,57 +846,53 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.137 \newpage
+l.135 \newpage
                [1] [2]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 153.
+(Font)              <9> on input line 151.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 153.
+(Font)              <5> on input line 151.
  [3]
-Overfull \hbox (1.2912pt too wide) in paragraph at lines 194--195
-[]\T1/cmtt/m/n/10.95 Time Slice\T1/cmr/m/n/10.95 : if set to \T1/cmtt/m/n/10.95
- 0\T1/cmr/m/n/10.95 , there will be no time slice and the sched-uler will be no
-n-preemptive[][][]. 
- []
-
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 197.
-<images/use_case.png, id=116, 642.4pt x 286.06876pt>
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 193.
+
+<images/use_case.png, id=126, 563.10374pt x 233.87375pt>
 File: images/use_case.png Graphic file (type png)
- <use images/use_case.png>
-Package pdftex.def Info: images/use_case.png used on input line 205.
-(pdftex.def)             Requested size: 455.8843pt x 203.0142pt.
 
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[4] [5 <./images/use_case.png (PNG copy)>]
-<images/scheduler_example.png, id=131, 573.14125pt x 394.47375pt>
+<use images/use_case.png>
+Package pdftex.def Info: images/use_case.png used on input line 203.
+(pdftex.def)             Requested size: 455.8843pt x 189.34389pt.
+ [4] [5 <./images/use_case.png>]
+<images/scheduler_example.png, id=143, 573.14125pt x 394.47375pt>
 File: images/scheduler_example.png Graphic file (type png)
 
 <use images/scheduler_example.png>
-Package pdftex.def Info: images/scheduler_example.png used on input line 245.
+Package pdftex.def Info: images/scheduler_example.png used on input line 241.
 (pdftex.def)             Requested size: 455.8843pt x 313.77367pt.
- [6 <./images/scheduler_example.png>]
-[7]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 261.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 261.
+ [6
+
+] [7 <./images/scheduler_example.png>]
+[8
+
+]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 256.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 256.
  (./BION_MARTIN_VIAU-Cahier_des_charges.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 261.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 261.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 256.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 256.
 Package rerunfilecheck Info: File `BION_MARTIN_VIAU-Cahier_des_charges.out' has
  not changed.
-(rerunfilecheck)             Checksum: F3FCE5DC6BA78E1803BDE4DEBEB6D28A;951.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 261.
+(rerunfilecheck)             Checksum: E15175C02CB50F6EFD3C1CD0B7EA3BDB;1102.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 256.
  ) 
 Here is how much of TeX's memory you used:
- 9646 strings out of 494957
- 139657 string characters out of 6180029
- 240358 words of memory out of 5000000
- 12703 multiletter control sequences out of 15000+600000
+ 9652 strings out of 494957
+ 139757 string characters out of 6180029
+ 239364 words of memory out of 5000000
+ 12705 multiletter control sequences out of 15000+600000
  18099 words of font info for 42 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 37i,11n,43p,642b,402s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,11n,43p,613b,352s stack positions out of 5000i,500n,10000p,200000b,80000s
  </home/archangel/.texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1200.600pk> </ho
 me/archangel/.texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.600pk> </home/arch
 angel/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0900.600pk> </home/archangel/.
@@ -911,11 +907,11 @@ ec/ecbx1095.600pk> </home/archangel/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx
 home/archangel/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx2488.600pk> </home/ar
 changel/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk></usr/share/texli
 ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on BION_MARTIN_VIAU-Cahier_des_charges.pdf (8 pages, 204354 byte
+Output written on BION_MARTIN_VIAU-Cahier_des_charges.pdf (9 pages, 192528 byte
 s).
 PDF statistics:
- 534 PDF objects out of 1000 (max. 8388607)
- 184 compressed objects within 2 object streams
- 29 named destinations out of 1000 (max. 500000)
- 128 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 562 PDF objects out of 1000 (max. 8388607)
+ 199 compressed objects within 2 object streams
+ 33 named destinations out of 1000 (max. 500000)
+ 144 words of extra memory for PDF output out of 10000 (max. 10000000)
 
