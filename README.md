@@ -50,8 +50,8 @@ You can replace `git add .` by `git add file1 file2` but the use of feature bran
 *(The `-u` option is needed only for the first push of the new branch)*
 
 To be updated with each developers, always pull main branches :
-###### `git pull dev`
-###### `git pull master`
+`git pull dev`
+`git pull master`
 and then rebase your branch :
 
 `$ (featureA) git rebase dev && git pull`
@@ -64,7 +64,7 @@ When your feature is complete, merge it on dev to test it with other developers 
 
 `$ (dev) git push`
 
-##### /!\ Always push working features on dev, you're not alone on this branch /!\
+#### /!\ Always push working features on dev, you're not alone on this branch /!\
 *If there are bugs on `dev` after your push, please resolve them quickly, revert if you can't, but don't leave `dev` buggy*
 
 If debug is finished on branch `dev`, you can remove your `feature<feature_name>` branch :
