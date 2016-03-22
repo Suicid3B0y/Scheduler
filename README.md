@@ -2,7 +2,7 @@
 *C++ Scheduler with Fixed-Priority Pre-emptive Scheduling*
 
 ### Repository workflow
-##### Hint 
+#### Hint 
 `$ (dev) git command` means that you should run `git command` on branch `dev`. `$ git blabla` means that you can run `git command` where you want.
 
 #### Create local repository
@@ -21,7 +21,7 @@ There is a default backup repository on GitHub, you can add it by running this :
 `$ git checkout branch_name`
 
 ##### /!\ NEVER commit on branches `dev` or `master`, use a `feature` branch then merge it /!\
-##
+
 #### Update your local branch
 `$ (master) git pull --prune`
 
