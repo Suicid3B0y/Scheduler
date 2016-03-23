@@ -23,12 +23,10 @@ queue<Job> Reader::parseFile(boost::filesystem::path filename) {
         in >> burst_time >> user_priority >> cpu_load;
         getline(in, commande_line);
 
-
         cout << "Command line: " << commande_line << endl;
         cout << "Burst time: " << burst_time << endl;
         cout << "User priority: " << user_priority << endl;
         cout << "CPU load: " << cpu_load << endl;
-
 
         Job job = Job(commande_line, burst_time, user_priority, cpu_load);
 
