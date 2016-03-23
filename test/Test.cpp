@@ -1,7 +1,7 @@
 #include <chrono>  // For thread sleeping
 #include <thread>  // For thread sleeping
 #include <assert.h>
-#include "job.h"
+#include "../src/Job/Job.h"
 
 /** Unit tests **/
 

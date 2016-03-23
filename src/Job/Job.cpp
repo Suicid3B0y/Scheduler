@@ -1,4 +1,4 @@
-#include "job.h"
+#include "Job.h"
 
 
 int aging_calculation(std::time_t t1, std::time_t t2) {

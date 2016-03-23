@@ -8,7 +8,7 @@ link_directories(${Boost_INCLUDE_DIRS})
 add_executable(scheduler
         src/main.cpp)
 add_executable(test
-        src/test.cpp
+        test/Test.cpp
         src/job.cpp)
 target_link_libraries(scheduler ${Boost_LIBRARIES})
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")

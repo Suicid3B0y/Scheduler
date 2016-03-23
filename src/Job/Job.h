@@ -2,7 +2,7 @@
 #define _H_JOB
 
 
-#include "scheduler.h"
+#include "../Scheduler/Scheduler.h"
 
 #include <iostream>
 #include <ctime>
@@ -15,7 +15,7 @@ using namespace std;
 class Job {
 
     private:
-    
+
     public:
         // XXX: Currently public, might be private
         std::string command_line;
