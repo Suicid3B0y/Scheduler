@@ -6,10 +6,12 @@ find_package(Boost 1.58 REQUIRED COMPONENTS system program_options regex)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 link_directories(${Boost_INCLUDE_DIRS})
 add_executable(scheduler
-        src/main.cpp)
+        src/main.cpp
+        src/Job/Job.cpp
+        src/Reader/Reader.cpp)
 add_executable(test
         test/Test.cpp
-        src/job.cpp)
+        src/Job/Job.cpp)
 target_link_libraries(scheduler ${Boost_LIBRARIES})
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 
