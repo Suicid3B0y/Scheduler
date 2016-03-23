@@ -34,4 +34,3 @@ bool operator>(const Job& left, const Job& right) {
 bool operator<(const Job& left, const Job& right) {
     return right > left;
 }
-
