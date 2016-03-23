@@ -1,7 +1,9 @@
 #include <iostream>
-#include <vector>
+#include <queue>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
+#include "Reader/Reader.h"
+#include "Job/Job.h"
 
 using namespace std;
 namespace po = boost::program_options;
@@ -67,6 +69,13 @@ int main(int argc, char **argv) {
             cout << "Input file: " << input_filepath << endl;
             // TODO : INITIATE JOB QUEUE WITH QUEUE OPTIONS
             // TODO : LAUNCH SCHEDULING WITH QUEUE FEED ON INPUT FILE
+
+
+            std::queue<Job> job_queue;
+            job_queue = Reader::parseFile(input_filepath);
+
+            cout << "Queue size: " << job_queue.size() << endl;
+
         } else {
             cout << "No file specified, please use -f (or --input-file) option to specify a filepath" << endl;
         return 1;
