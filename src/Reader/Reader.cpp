@@ -20,14 +20,15 @@ queue<Job> Reader::parseFile(boost::filesystem::path filename) {
     while (getline(file, line)) {
 
         istringstream in(line);
-        in >> commande_line >> burst_time >> user_priority >> cpu_load;
+        in >> burst_time >> user_priority >> cpu_load;
+        getline(in, commande_line);
 
-        /*
-        cout << commande_line << endl;
-        cout << burst_time << endl;
-        cout << user_priority << endl;
-        cout << cpu_load << endl;
-         */
+
+        cout << "Command line: " << commande_line << endl;
+        cout << "Burst time: " << burst_time << endl;
+        cout << "User priority: " << user_priority << endl;
+        cout << "CPU load: " << cpu_load << endl;
+
 
         Job job = Job(commande_line, burst_time, user_priority, cpu_load);
 
