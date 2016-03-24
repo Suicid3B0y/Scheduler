@@ -1,38 +1,46 @@
+#ifndef _H_JOB_QUEUE
+#define _H_JOB_QUEUE
 
-#ifndef GSI_PROJECT_JOB_H
-#define GSI_PROJECT_JOB_H
 
-#include<string>
+#include <iostream>  // FIXME: for debug purpose only
+#include <ctime>
+#include <queue>
+
 
 using namespace std;
 
+
 class Job {
 
-public:
-    Job(string commande_line, int burst_time, int user_priority, int cpu_load) : commande_line(
-            commande_line), burst_time(burst_time), user_priority(user_priority), cpu_load(
-            cpu_load) { }
+    private:
+    
+    public:
+        // XXX: Currently public, might be private
+        string command_line;
+        int burst_time;
+        int user_priority;
+        int cpu_load;
+        time_t timestamp;
 
+        // Constructors
+        Job(string command_line, int burst_time);
+        Job(string command_line, int burst_time, int user_priority, int cpu_load);
 
-    const string &getCommande_line() const {
-        return commande_line;
-    }
+        // Comparators
+        // NOTE: a job CANNOT be equal to another. Then j1 > j2 == !(j1 < j2)
+        friend bool operator> (const Job& left, const Job& right);
+        friend bool operator< (const Job& left, const Job& right);
 
-    int getBurst_time() const {
-        return burst_time;
-    }
-
-    int getUser_priority() const {
-        return user_priority;
-    }
-
-    int getCpu_load() const {
-        return cpu_load;
-    }
-
-private:
-    string commande_line;
-    int burst_time, user_priority, cpu_load;
 };
 
-#endif //GSI_PROJECT_JOB_H
+
+struct JobComparator {
+    bool operator()(const Job& left, const Job& right) {
+        return left < right;
+    }
+};
+
+
+typedef priority_queue<Job, vector<Job>> JobQueue;
+
+#endif
