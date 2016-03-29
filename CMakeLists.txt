@@ -10,7 +10,7 @@ add_executable(scheduler
         src/Job/Job.cpp
         src/Reader/Reader.cpp)
 add_executable(test
-        Test/test.cpp
+        Test/Test.cpp
         src/job.cpp)
 target_link_libraries(scheduler ${Boost_LIBRARIES})
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")

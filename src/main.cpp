@@ -1,9 +1,4 @@
-#include <iostream>
-#include <queue>
-#include <boost/program_options.hpp>
-#include <boost/filesystem.hpp>
-#include "Reader/Reader.h"
-#include "Job/Job.h"
+#include "main.h"
 
 using namespace std;
 namespace po = boost::program_options;
