@@ -1,13 +1,10 @@
 #ifndef _H_JOB
 #define _H_JOB
 
-
 #include "../Scheduler/Scheduler.h"
-
 #include <iostream>
 #include <ctime>
 #include <queue>
-
 
 using namespace std;
 
