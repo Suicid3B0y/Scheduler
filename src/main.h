@@ -3,12 +3,13 @@
 
 
 #include "Scheduler/Scheduler.h"
+#include "Reader/Reader.h"
+#include "Job/Job.h"
 
 #include <iostream>
 #include <queue>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
-#include "Reader/Reader.h"
-#include "Job/Job.h"
+
 
 #endif
