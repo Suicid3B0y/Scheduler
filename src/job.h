@@ -1,8 +1,10 @@
-#ifndef _H_JOB_QUEUE
-#define _H_JOB_QUEUE
+#ifndef _H_JOB
+#define _H_JOB
 
 
-#include <iostream>  // FIXME: for debug purpose only
+#include "scheduler.h"
+
+#include <iostream>
 #include <ctime>
 #include <queue>
 
@@ -33,12 +35,6 @@ class Job {
 
 };
 
-
-struct JobComparator {
-    bool operator()(const Job& left, const Job& right) {
-        return left < right;
-    }
-};
 
 
 typedef std::priority_queue<Job, std::vector<Job>> JobQueue;
