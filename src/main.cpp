@@ -1,7 +1,5 @@
-#include <iostream>
-#include <vector>
-#include <boost/program_options.hpp>
-#include <boost/filesystem.hpp>
+#include "main.h"
+
 
 using namespace std;
 namespace po = boost::program_options;
