@@ -2,7 +2,7 @@
 #define _H_JOB
 
 
-#include "scheduler.h"
+#include "../Scheduler/Scheduler.h"
 
 #include <iostream>
 #include <ctime>
