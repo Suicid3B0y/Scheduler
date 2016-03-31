@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
             ("file-startup,F", "launches the scheduler and feed Job Queue with jobs contained in a specified file with the -i option")
             ("job-startup,J", "launches the scheduler and feed Job Queue with the specified job")
             //("version,v", "print version string")
-            ("help, h", "produce help message");
+            ("help,h", "produce help message");
 
     po::options_description config("File options");
     config.add_options()
