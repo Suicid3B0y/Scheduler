@@ -53,32 +53,31 @@ int main(int argc, char **argv) {
     }
     
     if (vm.count("file-startup") || vm.count("job-startup")) {
-        // FOR DEBUG ONLY, TO REMOVE
-        cout << "Queue options:" << endl;
-        cout << "   time-slice: " << time_slice << endl;
-        cout << "   core-number: " << core_number << endl;
-        cout << "   timout: " << timout << endl;
+        debug("Queue options:" << endl);
+        debug("   time-slice: " << time_slice << endl);
+        debug("   core-number: " << core_number << endl);
+        debug("   timout: " << timout << endl);
     }
     
     if (vm.count("file-startup")) {
         if (vm.count("input-file")) {
-            cout << "Input file: " << input_filepath << endl;
+            debug("Input file: " << input_filepath << endl);
             // TODO : INITIATE JOB QUEUE WITH QUEUE OPTIONS
             // TODO : LAUNCH SCHEDULING WITH QUEUE FEED ON INPUT FILE
         } else {
-            cout << "No file specified, please use -f (or --input-file) option to specify a filepath" << endl;
-        return 1;
+            cerr << "No file specified, please use -i (or --input-file) option to specify a filepath" << endl;
+            return 1;
         }
     }
     
     if (vm.count("job-startup")) {
         if (vm.count("command-line")) {
             if (vm.count("burst-time")) {
-                cout << "Job options:" << endl;
-                cout << "   command-line: " << command_line << endl;
-                cout << "   burst-time: " << burst_time << endl;
-                cout << "   user-priority: " << user_priority << endl;
-                cout << "   cpu-load: " << cpu_load << endl;         
+                debug("Job options:" << endl);
+                debug("   command-line: " << command_line << endl);
+                debug("   burst-time: " << burst_time << endl);
+                debug("   user-priority: " << user_priority << endl);
+                debug("   cpu-load: " << cpu_load << endl);
                 // TODO : INITIATE JOB QUEUE WITH QUEUE OPTIONS
                 // TODO : LAUNCH SCHEDULING WITH QUEUE FEED WITH THE SPECIFIED JOB
             } else {
