@@ -11,11 +11,10 @@
 /**
  * Project macro definition
  */
-
 #if DEBUG
-#define debug(text) std::cerr << text
+    #define debug(text) std::cerr << text
 #else
-#define debug(text)
+    #define debug(text)
 #endif
 
 
