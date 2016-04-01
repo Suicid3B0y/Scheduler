@@ -46,9 +46,6 @@ bool operator>(const Job& left, const Job& right) {
 
 bool operator<(const Job& left, const Job& right) {
     return right > left;
-<<<<<<< f0680e82eec902eea854dd062f728f114c18cb4b:src/Job/Job.cpp
-}
-=======
 }
 
 
@@ -78,4 +75,3 @@ bool Job::stop() {
     // TODO: stop the process...
     return true;
 }
->>>>>>> featureSchedulerController: scheduler controller structure:src/job.cpp

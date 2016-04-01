@@ -2,8 +2,8 @@
 #define _H_CONTROLLER
 
 
-#include "scheduler.h"
-#include "job.h"
+#include "Scheduler/Scheduler.h"
+#include "Job/Job.h"
 
 #include <vector>
 #include <algorithm>
