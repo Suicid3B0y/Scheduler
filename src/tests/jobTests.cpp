@@ -65,14 +65,11 @@ void runJobSuite() {
 }
 
 
-/*
 void runJobQueueSuite() {
     cute::suite s;
 
-    cute::ide_listener lis;
-    cute::makeRunner(lis)(s, "Job test suite");
-}
-*/
+    s.push_back(CUTE(testJobPriorityQueue));
 
-void runJobQueueSuite() {
+    cute::ide_listener<> lis;
+    cute::makeRunner(lis)(s, "Job test suite");
 }
