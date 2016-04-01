@@ -2,7 +2,7 @@
 
 
 
-int testController() {
+void testController() {
     job_ptr p_j1 = make_shared<Job>("a", 100, 1, 10);
     job_ptr p_j2 = make_shared<Job>("b", 200, 2, 10);
     job_ptr p_j3 = make_shared<Job>("c", 300, 2, 10);
@@ -30,8 +30,6 @@ int testController() {
     runningJobs = controller.updateRunningJobs();  // Should start the job 3
     ASSERT(runningJobs[0].get()->command_line == p_j3.get()->command_line);
     ASSERT(runningJobs[0].get()->startTime != 0);
-
-    return 1;
 }
 
 

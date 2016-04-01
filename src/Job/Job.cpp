@@ -21,15 +21,13 @@ Job::Job(string command_line, int burst_time) : command_line(command_line), burs
 }
 
 
-Job::Job(string command_line, int burst_time, int user_priority, int cpu_load):
-    command_line(command_line), burst_time(burst_time), user_priority(user_priority), cpu_load(cpu_load) {
+Job::Job(string command_line, int burst_time, int user_priority, int cpu_load) :
+        command_line(command_line), burst_time(burst_time), user_priority(user_priority), cpu_load(cpu_load) {
     timestamp = time(nullptr);
     startTime = 0;
     runningTime = 0;
     isFinished = false;
 
-
-    debug("toto");
     jobId = jobIdValue;
     jobIdValue++;
     debug("Job initialization (long sequence)" << endl);
