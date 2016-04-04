@@ -1,7 +1,6 @@
 #include "controllerTests.h"
 
 
-
 void testController() {
     job_ptr p_j1 = make_shared<Job>("a", 100, 1, 10);
     job_ptr p_j2 = make_shared<Job>("b", 200, 2, 10);

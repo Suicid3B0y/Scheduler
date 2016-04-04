@@ -2,9 +2,9 @@
 #define _H_MAIN
 
 
-#include "Scheduler/Scheduler.h"
-#include "Reader/Reader.h"
-#include "Job/Job.h"
+#include "scheduler.h"
+#include "reader.h"
+#include "job.h"
 
 #include <iostream>
 #include <queue>

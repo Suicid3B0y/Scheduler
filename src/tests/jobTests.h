@@ -7,7 +7,7 @@
 #include <memory>
 
 #include "common.h"
-#include "../Job/Job.h"
+#include "../job.h"
 
 
 void runJobSuite();

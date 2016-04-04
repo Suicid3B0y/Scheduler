@@ -7,14 +7,14 @@ include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 link_directories(${Boost_INCLUDE_DIRS})
 add_executable(scheduler
         src/main.cpp
-        src/Job/Job.cpp
-        src/Reader/Reader.cpp)
-add_executable(test
+        src/job.cpp
+        src/reader.cpp)
+add_executable(tests
         src/tests/tests.cpp
         src/tests/jobTests.cpp
         src/tests/controllerTests.cpp
-        src/Job/Job.cpp
-        src/Controller.cpp)
+        src/job.cpp
+        src/controller.cpp)
 target_link_libraries(scheduler ${Boost_LIBRARIES})
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 

@@ -1,4 +1,4 @@
-#include "Controller.h"
+#include "controller.h"
 
 
 Controller::Controller(JobQueue jobQueue, unsigned int coreNumber): jobQueue(jobQueue), coreNumber(coreNumber) {

@@ -8,7 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <queue>
-#include "../Job/Job.h"
+#include "job.h"
 
 using namespace std;
 

@@ -1,7 +1,7 @@
 #ifndef _H_JOB
 #define _H_JOB
 
-#include "../Scheduler/Scheduler.h"
+#include "scheduler.h"
 
 #include <iostream>
 #include <ctime>

@@ -6,7 +6,7 @@
 #include <thread>
 
 #include "common.h"
-#include "../Controller.h"
+#include "../controller.h"
 
 
 void runControllerSuite();

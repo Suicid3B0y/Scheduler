@@ -1,4 +1,4 @@
-#include "Reader.h"
+#include "reader.h"
 
 queue<Job> Reader::parseFile(boost::filesystem::path filename) {
 
