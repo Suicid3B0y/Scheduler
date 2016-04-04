@@ -77,3 +77,8 @@ bool Job::stop() {
     // TODO: stop the process...
     return true;
 }
+
+
+bool JobPtrOrder::operator()(job_ptr const& left, job_ptr const& right) const {
+    return (*left.get()) < (*right.get());
+}

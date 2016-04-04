@@ -49,10 +49,7 @@ typedef shared_ptr<Job> job_ptr;
 
 struct JobPtrOrder
 {
-    bool operator()(job_ptr const& left, job_ptr const& right) const
-    {
-        return (*left.get()) < (*right.get());
-    }
+    bool operator()(job_ptr const& left, job_ptr const& right) const;
 };
 
 
