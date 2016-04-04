@@ -12,6 +12,7 @@ add_executable(scheduler
 add_executable(test
         src/tests/tests.cpp
         src/tests/jobTests.cpp
+        src/tests/controllerTests.cpp
         src/Job/Job.cpp
         src/Controller.cpp)
 target_link_libraries(scheduler ${Boost_LIBRARIES})
