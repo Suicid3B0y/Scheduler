@@ -4,6 +4,7 @@
 
 #include <chrono>
 #include <thread>
+#include <memory>
 
 #include "common.h"
 #include "../Job/Job.h"

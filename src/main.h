@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <queue>
+#include <vector>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 

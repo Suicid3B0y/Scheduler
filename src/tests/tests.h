@@ -3,6 +3,7 @@
 
 
 #include "jobTests.h"
+#include "controllerTests.h"
 
 
 #endif

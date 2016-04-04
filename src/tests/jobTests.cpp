@@ -3,6 +3,7 @@
 
 using namespace std;
 
+
 void testShortJobInstantiation() {
     Job j("ls", 100);
 
@@ -36,20 +37,20 @@ void testJobComparison() {
 
 
 void testJobPriorityQueue() {
-    Job j1("a", 100, 1, 10);
-    Job j2("b", 200, 2, 10);
-    Job j3("c", 300, 2, 10);
+    job_ptr p_j1 = make_shared<Job>("ls", 100, 1, 10);
+    job_ptr p_j2 = make_shared<Job>("la", 200, 2, 10);
+    job_ptr p_j3 = make_shared<Job>("lb", 300, 2, 10);
 
     JobQueue queue;
-    queue.push(j1);
-    queue.push(j2);
-    queue.push(j3);
+    queue.push(p_j1);
+    queue.push(p_j2);
+    queue.push(p_j3);
 
-    ASSERT(queue.top().command_line == j2.command_line);
+    ASSERT(queue.top().get()->command_line == p_j2.get()->command_line);
     queue.pop();
-    ASSERT(queue.top().command_line == j3.command_line);
+    ASSERT(queue.top().get()->command_line == p_j3.get()->command_line);
     queue.pop();
-    ASSERT(queue.top().command_line == j1.command_line);
+    ASSERT(queue.top().get()->command_line == p_j1.get()->command_line);
 }
 
 
