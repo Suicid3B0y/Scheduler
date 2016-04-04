@@ -1,5 +1,6 @@
 #include "Job.h"
 
+
 static int jobIdValue = 0;  // FIXME: temporary turnaround
 
 
@@ -8,7 +9,7 @@ int aging_calculation(time_t t1, time_t t2) {
 }
 
 
-Job::Job(string command_line, int burst_time): command_line(command_line), burst_time(burst_time) {
+Job::Job(string command_line, int burst_time) : command_line(command_line), burst_time(burst_time) {
     timestamp = time(nullptr);
     startTime = 0;
     runningTime = 0;
@@ -34,20 +35,23 @@ Job::Job(string command_line, int burst_time, int user_priority, int cpu_load):
     debug("Job initialization (long sequence)" << endl);
 }
 
-bool operator>(const Job& left, const Job& right) {
-    time_t aging;
+bool operator<(const Job &left, const Job &right) {
 
     if (left.user_priority != right.user_priority) {
-        return left.user_priority > right.user_priority;
+        return left.user_priority < right.user_priority;
     }
 
-    aging = aging_calculation(left.timestamp, right.timestamp);
+    std::time_t current_timestamp = std::time(nullptr);
 
-    return (right.burst_time - left.burst_time) + aging > 0;
+    float l_burst_time = left.burst_time / (current_timestamp - left.timestamp + 1);
+    float r_burst_time = right.burst_time / (current_timestamp - right.timestamp + 1);
+
+    return (l_burst_time > r_burst_time);
 }
 
-bool operator<(const Job& left, const Job& right) {
-    return right > left;
+
+bool operator>(const Job &left, const Job &right) {
+    return right < left;
 }
 
 
