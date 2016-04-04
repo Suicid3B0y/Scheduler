@@ -27,6 +27,8 @@ Job::Job(string command_line, int burst_time, int user_priority, int cpu_load):
     runningTime = 0;
     isFinished = false;
 
+
+    debug("toto");
     jobId = jobIdValue;
     jobIdValue++;
     debug("Job initialization (long sequence)" << endl);

@@ -9,4 +9,6 @@
 #include "../Controller.h"
 
 
+void runControllerSuite();
+
 #endif

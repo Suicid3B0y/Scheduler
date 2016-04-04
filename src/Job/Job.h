@@ -6,6 +6,7 @@
 #include <iostream>
 #include <ctime>
 #include <queue>
+#include <memory>
 
 using namespace std;
 
@@ -43,7 +44,18 @@ class Job {
 };
 
 
+typedef shared_ptr<Job> job_ptr;
 
-typedef priority_queue<Job, vector<Job>> JobQueue;
+
+struct JobPtrOrder
+{
+    bool operator()(job_ptr const& left, job_ptr const& right) const
+    {
+        return (*left.get()) < (*right.get());
+    }
+};
+
+
+typedef priority_queue< job_ptr, vector<job_ptr>, JobPtrOrder > JobQueue;
 
 #endif

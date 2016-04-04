@@ -16,13 +16,13 @@ class Controller {
 
     private:
         JobQueue jobQueue;
-        vector<Job> currentJobs;
+        vector< shared_ptr<Job> > currentJobs;
         unsigned int coreNumber;
 
     public:
         Controller(JobQueue jobQueue, unsigned int coreNumber);
         
-        vector<Job> updateRunningJobs();
+        vector< shared_ptr<Job> > updateRunningJobs();
 };
 
 
