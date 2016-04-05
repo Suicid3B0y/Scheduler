@@ -1,68 +1,57 @@
 #include "job.h"
 
-static int jobIdValue = 0;  // FIXME: temporary turnaround
+static int jobIdValue = 0;  // FIXME: temporary work-around
 
-
-int aging_calculation(time_t t1, time_t t2) {
-    return (t2 - t1);  // FIXME: seems really simple...
+Job::Job() : Job("", 0)
+{
 }
 
+Job::Job(string command_line, int burst_time)
+    : Job(command_line, burst_time, DEFAULT_USER_PRIORITY, DEFAULT_CPU_LOAD)
+{
+    this->command_line = command_line;
+}
 
-Job::Job(string command_line, int burst_time) : command_line(command_line), burst_time(burst_time) {
-    timestamp = time(nullptr);
-    startTime = 0;
-    runningTime = 0;
-    isFinished = false;
-
-    jobId = jobIdValue;
+Job::Job(string command_line, int burst_time, int user_priority, int cpu_load)
+    : timestamp{time(nullptr)},
+      isFinished{false},
+      startTime{0},
+      runningTime{0},
+      command_line{command_line},
+      burst_time{burst_time},
+      user_priority{user_priority},
+      cpu_load{cpu_load}
+{
+    jobId = jobIdValue;  // FIXME: temporary work-around
     jobIdValue++;
-    debug("Job initialization (short sequence)" << endl);
 }
 
+Job &Job::operator=(const Job &other)
+{
+    command_line  = other.command_line;
+    burst_time    = other.burst_time;
+    user_priority = other.user_priority;
+    cpu_load      = other.cpu_load;
+    timestamp     = other.timestamp;
+    isFinished    = other.isFinished;
+    startTime     = other.startTime;
+    runningTime   = other.runningTime;
 
-Job::Job(string command_line, int burst_time, int user_priority, int cpu_load) :
-        command_line(command_line), burst_time(burst_time), user_priority(user_priority), cpu_load(cpu_load) {
-    timestamp = time(nullptr);
-    startTime = 0;
-    runningTime = 0;
-    isFinished = false;
-
-    jobId = jobIdValue;
-    jobIdValue++;
-    debug("Job initialization (long sequence)" << endl);
+    return *this;
 }
 
-bool operator<(const Job &left, const Job &right) {
-
-    if (left.user_priority != right.user_priority) {
-        return left.user_priority < right.user_priority;
-    }
-
-    std::time_t current_timestamp = std::time(nullptr);
-
-    float l_burst_time = left.burst_time / (current_timestamp - left.timestamp + 1);
-    float r_burst_time = right.burst_time / (current_timestamp - right.timestamp + 1);
-
-    return (l_burst_time > r_burst_time);
-}
-
-
-bool operator>(const Job &left, const Job &right) {
-    return right < left;
-}
-
-
-bool operator==(const Job& left, const Job& right) {
+bool operator==(const Job &left, const Job &right)
+{
     return left.getId() == right.getId();
 }
 
-
-int Job::getId() const {
+int Job::getId() const
+{
     return jobId;
 }
 
-
-bool Job::start() {
+bool Job::start()
+{
     startTime = time(nullptr);
     debug("Starting the job " << command_line << " time:" << startTime << endl);
 
@@ -70,16 +59,27 @@ bool Job::start() {
     return true;
 }
 
-bool Job::stop() {
+bool Job::stop()
+{
     runningTime += time(nullptr) - startTime;
-    debug("Stopping the job " << command_line << " (was running during " << time(nullptr) - startTime << " seconds)" << endl);
+    debug("Stopping the job " << command_line << " (was running during "
+                              << time(nullptr) - startTime << " seconds)" << endl);
     startTime = 0;
 
     // TODO: stop the process...
     return true;
 }
 
+bool JobPtrOrder::operator()(job_ptr const &left, job_ptr const &right) const
+{
+    if (left->user_priority != right->user_priority) {
+        return left->user_priority < right->user_priority;
+    }
 
-bool JobPtrOrder::operator()(job_ptr const& left, job_ptr const& right) const {
-    return (*left.get()) < (*right.get());
+    std::time_t current_timestamp = std::time(nullptr);
+
+    float l_burst_time = left->burst_time / (current_timestamp - left->timestamp + 1);
+    float r_burst_time = right->burst_time / (current_timestamp - right->timestamp + 1);
+
+    return (l_burst_time > r_burst_time);
 }

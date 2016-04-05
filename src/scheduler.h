@@ -7,6 +7,10 @@
  */
 #define DEBUG 1
 
+/* Job constants */
+#define DEFAULT_USER_PRIORITY 0
+#define DEFAULT_CPU_LOAD 100
+
 
 /**
  * Project macro definition
