@@ -4,6 +4,10 @@
 using namespace std;
 
 
+void testNetworkEntityManipulations() {
+    ServerSocket s(4242);
+}
+
 void testMessageManipulations() {
     Message message(42, "hello");
 

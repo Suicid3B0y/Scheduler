@@ -47,12 +47,16 @@
  * =====================================================================================
  */
 
+#include <thread>
 #include <iostream>
-#include <boost/asio.hpp>
+#include <chrono>
+#include <memory>
+#include <list>
+#include <vector>
+
+#include "socket/ServerSocket.h"
 #include "scheduler.h"
 #include "message_handler.h"
-
-using boost::asio::ip::tcp;
 
 
 #define MY_HOST "::1"
@@ -68,6 +72,7 @@ class Message
     public:
         Message();
         Message(Message &message);
+        explicit Message(const std::string raw_message);
         Message(const unsigned char opcode, const std::string payload);
         Message& operator=(Message &message);
 
@@ -78,36 +83,47 @@ class Message
 class NetworkEntity
 {
     private:
+        ServerSocket socket;
         std::string endpoint_addr;
-        std::unique_ptr<tcp::socket> socket_ptr;
-        NetworkEntity(std::string endpoint_addr, std::unique_ptr<tcp::socket> socket_ptr);
+        std::shared_ptr<MessageHandler> p_handler;
+        std::string local_buffer;
+
+        unsigned get_message_length(int timemout);  // NOTE: timeout is not supported right now (blocking IO)
 
     public:
         NetworkEntity();
-        explicit NetworkEntity(const std::string endpoint_addr);
-        NetworkEntity(std::string endpoint_addr, tcp::socket &socket);
+        NetworkEntity(const NetworkEntity &entity);
+        NetworkEntity& operator=(const NetworkEntity &entity);
+        NetworkEntity(const ServerSocket &socket, const std::string endpoint_addr, const std::shared_ptr<MessageHandler> handler);
 
-        std::string get_message(int timeout);
+        void start();
+        void stop();
         bool is_alive();
         bool is_me();
+        Message get_message(int timeout);  // NOTE: timeout is not supported right now (blocking IO)
 
         friend NetworkEntity& operator<<(NetworkEntity& output_entity, const Message &message);
-        friend NetworkEntity& operator>>(NetworkEntity& input_entity, Message &message);
 };
 
 
-class NetworkController
+class NetworkServer
 {
     private:
-        boost::asio::io_service io_service;
-        MessageHandler handler;
+        ServerSocket server;
+        std::vector< std::shared_ptr<NetworkEntity> > clients;
+        std::shared_ptr<MessageHandler> p_handler;
+        bool is_alive;
+        std::thread accept_thread;
+
+        void do_accept();
+        void handle_accept(ServerSocket client_socket);
 
     public:
-        NetworkController();
-        explicit NetworkController(const MessageHandler &handler);
-        NetworkController(const NetworkController &controller);
-        NetworkController& operator=(const NetworkController &controller);
+        NetworkServer();
+        NetworkServer(NetworkServer &network_server);
+        NetworkServer& operator=(NetworkServer &network_server);
+        NetworkServer(const short port, MessageHandler &handler);
 
-        NetworkEntity& connect(const std::string endpoint_addr);
-        NetworkEntity& connect(const std::string endpoint_addr, const int endpoint_port);
+        void start();
+        void stop();
 };

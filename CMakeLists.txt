@@ -14,6 +14,9 @@ add_executable(tests
         src/tests/jobTests.cpp
         src/tests/controllerTests.cpp
         src/tests/networkTests.cpp
+        src/socket/Socket.cpp
+        src/socket/ServerSocket.cpp
+        src/socket/ClientSocket.cpp
         src/job.cpp
         src/controller.cpp
         src/network.cpp

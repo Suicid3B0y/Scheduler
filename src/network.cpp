@@ -24,6 +24,10 @@ Message::Message(Message& message): Message(message.opcode, message.payload)
 {
 }
 
+Message::Message(const std::string raw_message): Message(raw_message[0], raw_message.substr(1))
+{
+}
+
 Message::Message(const unsigned char opcode, const std::string payload): opcode{opcode}, payload{payload}
 {
 }
@@ -46,33 +50,79 @@ Message::operator const std::string() const {
     return std::string(1, opcode) + payload;
 }
 
-NetworkEntity::NetworkEntity() : NetworkEntity(MY_HOST)
+// ----------------------------------------------------------------------------
+
+NetworkEntity::NetworkEntity() : NetworkEntity(ServerSocket{}, MY_HOST, std::make_shared<MessageHandler>())
 {
 }
 
-NetworkEntity::NetworkEntity(const std::string endpoint_addr)
-    : NetworkEntity(endpoint_addr, std::unique_ptr<tcp::socket>(nullptr))
+NetworkEntity::NetworkEntity(const NetworkEntity &entity) : NetworkEntity(entity.socket, entity.endpoint_addr, entity.p_handler)
 {
 }
 
-NetworkEntity::NetworkEntity(const std::string endpoint_addr, tcp::socket &socket)
-    : NetworkEntity(endpoint_addr, std::unique_ptr<tcp::socket>(&socket))
+NetworkEntity::NetworkEntity(const ServerSocket &socket, const std::string endpoint_addr, const std::shared_ptr<MessageHandler> p_handler)
+    : socket{socket}, endpoint_addr{endpoint_addr}, p_handler{p_handler}
 {
 }
 
-NetworkEntity::NetworkEntity(const std::string endpoint_addr, std::unique_ptr<tcp::socket> socket_ptr)
-    : endpoint_addr{endpoint_addr}, socket_ptr{std::move(socket_ptr)}
+NetworkEntity& NetworkEntity::operator=(const NetworkEntity &entity)
 {
+    socket = entity.socket;
+    endpoint_addr = entity.endpoint_addr;
+    p_handler = entity.p_handler;
+
+    return (*this);
 }
 
-std::string NetworkEntity::get_message(int timeout)
+unsigned NetworkEntity::get_message_length(int timeout)
 {
-    if (timeout < 0) {
-        debug("Receiving message from " << endpoint_addr << " (blocking I/O)" << std::endl);
-    } else {
-        debug("Receiving message from " << endpoint_addr << " (timeout : " << timeout <<")" << std::endl);
+    std::string data = local_buffer;
+    local_buffer = "";
+
+    while (data.length() < 4)
+    {
+        std::string tmp;
+        socket >> tmp;
+        data += tmp;
     }
-    return "toto"; // TODO
+
+    if (data.length() > 4)
+        local_buffer = data.substr(4);
+
+    unsigned sum = 0;
+    for (unsigned i = 0; i < 4; ++i)
+        sum += (int)data[i] << (8 * i);
+
+    return sum;
+}
+
+Message NetworkEntity::get_message(int timeout)
+{
+    unsigned length = get_message_length(timeout);
+    std::string data = local_buffer;
+
+    while (data.length() < length)
+    {
+        std::string tmp;
+        socket >> tmp;
+        data = tmp;
+    }
+
+    if (data.length() > length)
+        local_buffer = data.substr(length);
+
+    Message m{data};
+    return m;
+}
+
+void NetworkEntity::start()
+{
+    debug("Starting network entity" << std::endl);
+}
+
+void NetworkEntity::stop()
+{
+    debug("Stopping network entity" << std::endl);
 }
 
 bool NetworkEntity::is_alive()
@@ -91,43 +141,76 @@ NetworkEntity& operator<<(NetworkEntity &output_entity, const Message &message)
     return output_entity;
 }
 
-NetworkEntity& operator>>(NetworkEntity &input_entity, Message &message) {
-    message.load_from_string(input_entity.get_message(-1));
-    return input_entity;
-}
+// ----------------------------------------------------------------------------
 
-NetworkController::NetworkController(): NetworkController(DEFAULT_MESSAGE_HANDLER_CLASS{})
+NetworkServer::NetworkServer()
 {
 }
 
-NetworkController::NetworkController(const MessageHandler &handler): io_service{}, handler{handler}
+NetworkServer::NetworkServer(NetworkServer &network_server)
+    : server{network_server.server},
+      clients{std::vector< std::shared_ptr<NetworkEntity> >()},
+      p_handler{network_server.p_handler},
+      is_alive{false}
 {
+    clients.reserve(network_server.clients.size());
+
+    for (unsigned i = 0; i < network_server.clients.size(); ++i) {
+        clients.push_back(network_server.clients[i]);
+    }
 }
 
-NetworkController::NetworkController(const NetworkController &controller): NetworkController(controller.handler)
+NetworkServer& NetworkServer::operator=(NetworkServer &network_server)
 {
-}
+    NetworkServer tmp(network_server);
 
-NetworkController& NetworkController::operator=(const NetworkController &controller)
-{
-    handler = controller.handler;
+    server = tmp.server;
+    clients = tmp.clients;
+    p_handler = tmp.p_handler;
+    is_alive = tmp.is_alive;
 
     return (*this);
 }
 
-NetworkEntity& NetworkController::connect(const std::string endpoint_addr)
+NetworkServer::NetworkServer(const short port, MessageHandler &handler)
+    : server{ServerSocket(port)},
+      clients{std::vector< std::shared_ptr<NetworkEntity> >()},
+      p_handler{std::make_shared<MessageHandler>(handler)},
+      is_alive{false}
 {
-    return connect(endpoint_addr, DEFAULT_LISTENING_PORT);
 }
 
-NetworkEntity& NetworkController::connect(const std::string endpoint_addr, const int endpoint_port)
+void NetworkServer::do_accept()
 {
-    tcp::resolver resolver(io_service);
-    tcp::resolver::query query(endpoint_addr, std::to_string(endpoint_port));
-    tcp::resolver::iterator it = resolver.resolve(query);
+    while (is_alive) {
+        ServerSocket client_socket;
+        server.accept(client_socket);
+        handle_accept(client_socket);
+    }
+}
 
-    tcp::socket socket(io_service);
-    boost::asio::connect(socket, it);
+void NetworkServer::handle_accept(ServerSocket client_socket)
+{
+    NetworkEntity entity(client_socket, "todo", p_handler);  // TODO
 
-    return *(new NetworkEntity(endpoint_addr, socket));
+    clients.push_back(std::make_shared<NetworkEntity>(entity));
+
+    entity.start();
+}
+
+void NetworkServer::start()
+{
+    is_alive = true;
+
+    // http://stackoverflow.com/questions/10673585/start-thread-with-member-function
+    std::thread tmp(&NetworkServer::do_accept, this);
+    accept_thread = std::move(tmp);
+}
+
+void NetworkServer::stop()
+{
+    is_alive = false;
+
+    // FIXME: might require a fake connection initialization here.
+    accept_thread.join();
 }

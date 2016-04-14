@@ -7,4 +7,6 @@ class MessageHandler
 {
     public:
         MessageHandler();
+        MessageHandler(const MessageHandler &handler);
+        MessageHandler& operator=(const MessageHandler &handler);
 };

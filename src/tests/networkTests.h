@@ -4,6 +4,7 @@
 
 #include "common.h"
 #include "../network.h"
+#include "../socket/ServerSocket.h"
 
 
 void runNetworkSuite();
