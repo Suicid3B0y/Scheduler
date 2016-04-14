@@ -128,21 +128,21 @@ int Socket::recv ( std::string& s ) const
 
   memset ( buf, 0, MAXRECV + 1 );
 
-  int status = ::recv ( m_sock, buf, MAXRECV, 0 );
+  int nbbytes = ::recv ( m_sock, buf, MAXRECV, 0 );
 
-  if ( status == -1 )
+  if ( nbbytes == -1 )
     {
       std::cout << "status == -1   errno == " << errno << "  in Socket::recv\n";
       return 0;
     }
-  else if ( status == 0 )
+  else if ( nbbytes == 0 )
     {
       return 0;
     }
   else
     {
-      s = buf;
-      return status;
+      s = std::string(buf, buf+nbbytes);
+      return nbbytes;
     }
 }
 

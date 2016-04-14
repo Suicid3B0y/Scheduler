@@ -1,3 +1,6 @@
+#ifndef _H_MESSAGE_HANDLER
+#define _H_MESSAGE_HANDLER
+
 #include <iostream>
 
 
@@ -10,3 +13,5 @@ class MessageHandler
         MessageHandler(const MessageHandler &handler);
         MessageHandler& operator=(const MessageHandler &handler);
 };
+
+#endif

@@ -47,6 +47,9 @@
  * =====================================================================================
  */
 
+#ifndef _H_NETWORK
+#define _H_NETWORK
+
 #include <thread>
 #include <iostream>
 #include <chrono>
@@ -77,6 +80,8 @@ class Message
         Message& operator=(Message &message);
 
         void load_from_string(const std::string message);
+        unsigned message_length() const;
+        std::string encoded_message_length() const;
         operator const std::string() const;
 };
 
@@ -127,3 +132,5 @@ class NetworkServer
         void start();
         void stop();
 };
+
+#endif

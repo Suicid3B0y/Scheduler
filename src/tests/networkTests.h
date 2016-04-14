@@ -2,9 +2,13 @@
 #define _H_TESTS_NETWORKTESTS
 
 
+#include <thread>
+
 #include "common.h"
 #include "../network.h"
+#include "../message_handler.h"
 #include "../socket/ServerSocket.h"
+#include "../socket/ClientSocket.h"
 
 
 void runNetworkSuite();

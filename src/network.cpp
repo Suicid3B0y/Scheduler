@@ -46,6 +46,24 @@ void Message::load_from_string(const std::string message)
     payload = message.substr(1);
 }
 
+unsigned Message::message_length() const
+{
+    return payload.size() + 1;
+}
+
+std::string Message::encoded_message_length() const
+{
+    unsigned char packed[4];
+    unsigned lgt = message_length();
+
+    packed[0] = lgt >> 24;
+    packed[1] = lgt >> 16 & 0xff;
+    packed[2] = lgt >> 8 & 0xff;
+    packed[3] = lgt & 0xff;
+
+    return std::string(packed, packed + 4);
+}
+
 Message::operator const std::string() const {
     return std::string(1, opcode) + payload;
 }
@@ -79,8 +97,7 @@ unsigned NetworkEntity::get_message_length(int timeout)
     std::string data = local_buffer;
     local_buffer = "";
 
-    while (data.length() < 4)
-    {
+    while (data.length() < 4) {
         std::string tmp;
         socket >> tmp;
         data += tmp;
@@ -91,7 +108,7 @@ unsigned NetworkEntity::get_message_length(int timeout)
 
     unsigned sum = 0;
     for (unsigned i = 0; i < 4; ++i)
-        sum += (int)data[i] << (8 * i);
+        sum += (int)data[i] << (8 * (3 - i));
 
     return sum;
 }
@@ -137,7 +154,7 @@ bool NetworkEntity::is_me()
 
 NetworkEntity& operator<<(NetworkEntity &output_entity, const Message &message)
 {
-    debug("Sending message to " << output_entity.endpoint_addr << std::endl);
+    output_entity.socket << message.encoded_message_length() << message;
     return output_entity;
 }
 
