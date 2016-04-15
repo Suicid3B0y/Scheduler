@@ -25,7 +25,7 @@ add_executable(tests
 target_link_libraries(scheduler ${Boost_LIBRARIES})
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 
-set(CMAKE_CXX_FLAGS "-Wall -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -std=c++11")
+set(CMAKE_CXX_FLAGS "-Wall -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -std=c++14")
 # Compiler-specific C++11 activation.
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     execute_process(

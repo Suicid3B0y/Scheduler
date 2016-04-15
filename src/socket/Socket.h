@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <string>
 #include <arpa/inet.h>
+#include <memory>
 
 
 const int MAXHOSTNAME = 200;
@@ -43,7 +44,7 @@ class Socket
 
   bool is_valid() const { return m_sock != -1; }
 
- private:
+ protected:
 
   int m_sock;
   sockaddr_in m_addr;

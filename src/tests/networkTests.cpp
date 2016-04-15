@@ -4,16 +4,48 @@
 using namespace std;
 
 
+void testNetworkServer()
+{
+    MessageHandler handler;
+    NetworkServer serv(4243, handler);
+    Message to_send(42, "hello");
+
+    // Start the server
+    serv.start();
+    ASSERT(serv.get_clients().size() == 0);
+
+    // Initialize a client connection, test if it's well handled
+    ClientSocket client_socket("127.0.0.1", 4243);
+    {
+        int attempts = 10;
+        while (attempts && !serv.get_clients().size())
+        {
+            cout << serv.get_clients().size() << endl;
+            this_thread::sleep_for(1s);
+            --attempts;
+        }
+    }
+    ASSERT(serv.get_clients().size() == 1);
+
+    // Try to send a short message, for testing purpose only
+    client_socket << to_send.encoded_message_length() + (string)to_send;
+    Message received(serv.get_clients()[0]->get_message(42));
+    ASSERT((string)received == (string)to_send);
+
+    serv.stop();
+}
+
+
 // Fake server listener for testing the NetworkEntity class without using the NetworkServer class
 class FakeServer
 {
     private:
         ServerSocket server;
-        ServerSocket client_socket;
+        std::shared_ptr<ServerSocket> p_client_socket;
         thread t;
 
     public:
-        FakeServer(): server{ServerSocket(4242)}, client_socket{}, t{}
+        FakeServer(): server{ServerSocket(4242)}, p_client_socket{std::shared_ptr<ServerSocket>{new ServerSocket()}}, t{}
         {
             thread subt(&FakeServer::handle_acceptance, this);
             t = std::move(subt);
@@ -21,13 +53,13 @@ class FakeServer
 
         void handle_acceptance()
         {
-            server.accept(client_socket);
+            server.accept(p_client_socket);
         }
 
-        ServerSocket get_remote()
+        std::shared_ptr<ServerSocket> get_remote()
         {
             t.join();
-            return client_socket;
+            return p_client_socket;
         }
 
 };
@@ -38,15 +70,12 @@ void testNetworkEntityManipulations() {
 
     // Simulate a socket connection
     ClientSocket client_socket("127.0.0.1", 4242);
-    ServerSocket server_socket = serv.get_remote();
-    NetworkEntity entity(server_socket, "127.0.0.1", make_shared<MessageHandler>(MessageHandler{}));
+    std::shared_ptr<ServerSocket> p_server_socket = serv.get_remote();
+    NetworkEntity entity(p_server_socket, "127.0.0.1", make_shared<MessageHandler>(MessageHandler{}));
 
     // Send a message from the client to the server
-    debug("[1] First attempt..." << endl);
     client_socket << to_send.encoded_message_length() << to_send;
-    debug("[2] First attempt..." << endl);
     Message received(entity.get_message(42));
-    debug("[3] First attempt..." << endl);
     ASSERT((string)received == "*hello");
 
     // Send a message from the server to the client
@@ -61,16 +90,16 @@ void testSockets() {
 
     // Simulate a socket connection
     ClientSocket client_socket("127.0.0.1", 4242);
-    ServerSocket server_socket = serv.get_remote();
+    std::shared_ptr<ServerSocket> server_socket = serv.get_remote();
     string received;
 
     // Send a message from the client to the server
     client_socket << Message(42, "hello");
-    server_socket >> received;
+    (*server_socket) >> received;
     ASSERT(received == "*hello");
 
     // Send a message from the server to the client
-    server_socket << Message(42, "hello");
+    (*server_socket) << Message(42, "hello");
     client_socket >> received;
     ASSERT(received == "*hello");
 }
@@ -107,6 +136,7 @@ void runNetworkSuite() {
     s.push_back(CUTE(testMessageManipulations));
     s.push_back(CUTE(testSockets));
     s.push_back(CUTE(testNetworkEntityManipulations));
+    s.push_back(CUTE(testNetworkServer));
 
     cute::ide_listener<> lis;
     cute::makeRunner(lis)(s, "Network test suite");

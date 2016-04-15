@@ -88,10 +88,11 @@ class Message
 class NetworkEntity
 {
     private:
-        ServerSocket socket;
+        std::shared_ptr<ServerSocket> p_socket;
         std::string endpoint_addr;
         std::shared_ptr<MessageHandler> p_handler;
-        std::string local_buffer;
+        std::string local_buffer;  // FIXME: might actually do some errors if not shared with other instances / copy of
+                                   //        the same entity.
 
         unsigned get_message_length(int timemout);  // NOTE: timeout is not supported right now (blocking IO)
 
@@ -99,7 +100,7 @@ class NetworkEntity
         NetworkEntity();
         NetworkEntity(const NetworkEntity &entity);
         NetworkEntity& operator=(const NetworkEntity &entity);
-        NetworkEntity(const ServerSocket &socket, const std::string endpoint_addr, const std::shared_ptr<MessageHandler> handler);
+        NetworkEntity(const std::shared_ptr<ServerSocket> &p_socket, const std::string endpoint_addr, const std::shared_ptr<MessageHandler> handler);
 
         void start();
         void stop();
@@ -121,7 +122,7 @@ class NetworkServer
         std::thread accept_thread;
 
         void do_accept();
-        void handle_accept(ServerSocket client_socket);
+        void handle_accept(std::shared_ptr<ServerSocket> &p_client_socket);
 
     public:
         NetworkServer();
@@ -131,6 +132,8 @@ class NetworkServer
 
         void start();
         void stop();
+
+        std::vector< std::shared_ptr<NetworkEntity> > get_clients();
 };
 
 #endif

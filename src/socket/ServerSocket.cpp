@@ -50,10 +50,20 @@ const ServerSocket& ServerSocket::operator >> ( std::string& s ) const
   return *this;
 }
 
-void ServerSocket::accept ( ServerSocket& sock )
+void ServerSocket::set_non_blocking(bool non_blocking)
 {
-  if ( ! Socket::accept ( sock ) )
-    {
-      throw SocketException ( "Could not accept socket." );
-    }
+   Socket::set_non_blocking(non_blocking);
+}
+
+bool ServerSocket::accept ( ServerSocket& sock )
+{
+  return Socket::accept(sock);
+}
+
+bool ServerSocket::accept ( std::shared_ptr<ServerSocket> &p_sock )
+{
+  int addr_length = sizeof ( m_addr );
+  p_sock->m_sock = ::accept ( m_sock, ( sockaddr * ) &m_addr, ( socklen_t * ) &addr_length );
+
+  return p_sock->m_sock > 0;
 }

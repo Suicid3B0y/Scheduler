@@ -7,6 +7,9 @@
 #include <errno.h>
 #include <fcntl.h>
 
+#include "../scheduler.h"
+#include <iostream>
+
 
 
 Socket::Socket() :
@@ -106,11 +109,13 @@ bool Socket::accept ( Socket& new_socket ) const
 }
 
 
+
 bool Socket::send ( const std::string s ) const
 {
   int status = ::send ( m_sock, s.c_str(), s.size(), MSG_NOSIGNAL );
   if ( status == -1 )
     {
+      debug("Error while sending data over the socket :: Errno: " << errno << std::endl);
       return false;
     }
   else
@@ -132,7 +137,6 @@ int Socket::recv ( std::string& s ) const
 
   if ( nbbytes == -1 )
     {
-      std::cout << "status == -1   errno == " << errno << "  in Socket::recv\n";
       return 0;
     }
   else if ( nbbytes == 0 )
