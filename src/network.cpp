@@ -16,23 +16,23 @@
  */
 #include "network.h"
 
-Message::Message(): Message(0, "")
+BaseMessage::BaseMessage(): BaseMessage(0, "")
 {
 }
 
-Message::Message(Message& message): Message(message.opcode, message.payload)
+BaseMessage::BaseMessage(BaseMessage& message): BaseMessage(message.opcode, message.payload)
 {
 }
 
-Message::Message(const std::string raw_message): Message(raw_message[0], raw_message.substr(1))
+BaseMessage::BaseMessage(const std::string raw_message): BaseMessage(raw_message[0], raw_message.substr(1))
 {
 }
 
-Message::Message(const unsigned char opcode, const std::string payload): opcode{opcode}, payload{payload}
+BaseMessage::BaseMessage(const unsigned char opcode, const std::string payload): opcode{opcode}, payload{payload}
 {
 }
 
-Message& Message::operator=(Message &message)
+BaseMessage& BaseMessage::operator=(BaseMessage &message)
 {
     opcode = message.opcode;
     payload = message.payload;
@@ -40,18 +40,18 @@ Message& Message::operator=(Message &message)
     return (*this);
 }
 
-void Message::load_from_string(const std::string message)
+void BaseMessage::load_from_string(const std::string message)
 {
     opcode = message[0];
     payload = message.substr(1);
 }
 
-unsigned Message::message_length() const
+unsigned BaseMessage::message_length() const
 {
     return payload.size() + 1;
 }
 
-std::string Message::encoded_message_length() const
+std::string BaseMessage::encoded_message_length() const
 {
     unsigned char packed[4];
     unsigned lgt = message_length();
@@ -64,7 +64,7 @@ std::string Message::encoded_message_length() const
     return std::string(packed, packed + 4);
 }
 
-Message::operator const std::string() const {
+BaseMessage::operator const std::string() const {
     return std::string(1, opcode) + payload;
 }
 
@@ -120,7 +120,7 @@ unsigned NetworkEntity::get_message_length(int timeout)
     return sum;
 }
 
-Message NetworkEntity::get_message(int timeout)
+BaseMessage NetworkEntity::get_message(int timeout)
 {
     unsigned length = get_message_length(timeout);
     std::string data = local_buffer;
@@ -135,7 +135,7 @@ Message NetworkEntity::get_message(int timeout)
     if (data.length() > length)
         local_buffer = data.substr(length);
 
-    Message m{data};
+    BaseMessage m{data};
     return m;
 }
 
@@ -159,7 +159,7 @@ bool NetworkEntity::is_me()
     return endpoint_addr == MY_HOST;
 }
 
-NetworkEntity& operator<<(NetworkEntity &output_entity, const Message &message)
+NetworkEntity& operator<<(NetworkEntity &output_entity, const BaseMessage &message)
 {
     (*output_entity.p_socket.get()) << message.encoded_message_length() << message;
     return output_entity;

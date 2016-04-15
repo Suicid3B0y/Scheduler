@@ -8,7 +8,7 @@ void testNetworkServer()
 {
     MessageHandler handler;
     NetworkServer serv(4243, handler);
-    Message to_send(42, "hello");
+    BaseMessage to_send(42, "hello");
 
     // Start the server
     serv.start();
@@ -29,7 +29,7 @@ void testNetworkServer()
 
     // Try to send a short message, for testing purpose only
     client_socket << to_send.encoded_message_length() + (string)to_send;
-    Message received(serv.get_clients()[0]->get_message(42));
+    BaseMessage received(serv.get_clients()[0]->get_message(42));
     ASSERT((string)received == (string)to_send);
 
     serv.stop();
@@ -66,7 +66,7 @@ class FakeServer
 
 void testNetworkEntityManipulations() {
     FakeServer serv{};
-    Message to_send(42, "hello");
+    BaseMessage to_send(42, "hello");
 
     // Simulate a socket connection
     ClientSocket client_socket("127.0.0.1", 4242);
@@ -75,11 +75,11 @@ void testNetworkEntityManipulations() {
 
     // Send a message from the client to the server
     client_socket << to_send.encoded_message_length() << to_send;
-    Message received(entity.get_message(42));
+    BaseMessage received(entity.get_message(42));
     ASSERT((string)received == "*hello");
 
     // Send a message from the server to the client
-    entity << Message(42, "hello");
+    entity << BaseMessage(42, "hello");
     std::string message;
     client_socket >> message;
     ASSERT(message == to_send.encoded_message_length() + "*hello");
@@ -94,18 +94,18 @@ void testSockets() {
     string received;
 
     // Send a message from the client to the server
-    client_socket << Message(42, "hello");
+    client_socket << BaseMessage(42, "hello");
     (*server_socket) >> received;
     ASSERT(received == "*hello");
 
     // Send a message from the server to the client
-    (*server_socket) << Message(42, "hello");
+    (*server_socket) << BaseMessage(42, "hello");
     client_socket >> received;
     ASSERT(received == "*hello");
 }
 
 void testMessageManipulations() {
-    Message message(42, "hello");
+    BaseMessage message(42, "hello");
 
     ASSERT((string)message == "*hello");
 
@@ -122,7 +122,7 @@ void testMessageManipulations() {
     for (unsigned i = 0; i < 10793; ++i)
         message_content[i] = 'i';
 
-    Message message2(42, std::string(message_content, message_content + 10793));
+    BaseMessage message2(42, std::string(message_content, message_content + 10793));
     char encoded_length[4] = {'\0', '\0', '*', '*'};
     std::string expected(encoded_length, encoded_length + 4);
 

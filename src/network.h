@@ -66,18 +66,18 @@
 #define DEFAULT_LISTENING_PORT 4242
 
 
-class Message
+class BaseMessage
 {
     private:
         int opcode;
         std::string payload;
 
     public:
-        Message();
-        Message(Message &message);
-        explicit Message(const std::string raw_message);
-        Message(const unsigned char opcode, const std::string payload);
-        Message& operator=(Message &message);
+        BaseMessage();
+        BaseMessage(BaseMessage &message);
+        explicit BaseMessage(const std::string raw_message);
+        BaseMessage(const unsigned char opcode, const std::string payload);
+        BaseMessage& operator=(BaseMessage &message);
 
         void load_from_string(const std::string message);
         unsigned message_length() const;
@@ -106,9 +106,9 @@ class NetworkEntity
         void stop();
         bool is_alive();
         bool is_me();
-        Message get_message(int timeout);  // NOTE: timeout is not supported right now (blocking IO)
+        BaseMessage get_message(int timeout);  // NOTE: timeout is not supported right now (blocking IO)
 
-        friend NetworkEntity& operator<<(NetworkEntity& output_entity, const Message &message);
+        friend NetworkEntity& operator<<(NetworkEntity& output_entity, const BaseMessage &message);
 };
 
 
