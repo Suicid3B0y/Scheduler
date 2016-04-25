@@ -4,6 +4,7 @@
 
 #include "jobTests.h"
 #include "controllerTests.h"
+#include "networkTests.h"
 
 
 #endif
