@@ -18,6 +18,7 @@ class ServerSocket : private Socket
   const ServerSocket& operator >> ( std::string& ) const;
 
   void set_non_blocking(bool blocking);
+  bool has_data();
 
   bool accept ( ServerSocket& );
   bool accept ( std::shared_ptr<ServerSocket> &p_sock );

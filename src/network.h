@@ -66,25 +66,6 @@
 #define DEFAULT_LISTENING_PORT 4242
 
 
-class BaseMessage
-{
-    private:
-        int opcode;
-        std::string payload;
-
-    public:
-        BaseMessage();
-        BaseMessage(BaseMessage &message);
-        explicit BaseMessage(const std::string raw_message);
-        BaseMessage(const unsigned char opcode, const std::string payload);
-        BaseMessage& operator=(BaseMessage &message);
-
-        void load_from_string(const std::string message);
-        unsigned message_length() const;
-        std::string encoded_message_length() const;
-        operator const std::string() const;
-};
-
 class NetworkEntity
 {
     private:
@@ -93,11 +74,15 @@ class NetworkEntity
         std::shared_ptr<MessageHandler> p_handler;
         std::string local_buffer;  // FIXME: might actually do some errors if not shared with other instances / copy of
                                    //        the same entity.
+        bool is_started;
+        std::thread listening_thread;
 
         unsigned get_message_length(int timemout);  // NOTE: timeout is not supported right now (blocking IO)
+        void wait_new_messages();
 
     public:
         NetworkEntity();
+        ~NetworkEntity();
         NetworkEntity(const NetworkEntity &entity);
         NetworkEntity& operator=(const NetworkEntity &entity);
         NetworkEntity(const std::shared_ptr<ServerSocket> &p_socket, const std::string endpoint_addr, const std::shared_ptr<MessageHandler> handler);
@@ -105,6 +90,7 @@ class NetworkEntity
         void start();
         void stop();
         bool is_alive();
+        bool has_data();
         bool is_me();
         BaseMessage get_message(int timeout);  // NOTE: timeout is not supported right now (blocking IO)
 

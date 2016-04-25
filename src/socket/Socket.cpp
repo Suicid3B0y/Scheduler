@@ -151,6 +151,15 @@ int Socket::recv ( std::string& s ) const
 }
 
 
+bool Socket::has_data() const
+{
+    int count;
+    ioctl(m_sock, FIONREAD, &count);
+
+    return count > 0;
+}
+
+
 
 bool Socket::connect ( const std::string host, const int port )
 {

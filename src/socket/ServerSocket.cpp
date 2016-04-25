@@ -55,6 +55,11 @@ void ServerSocket::set_non_blocking(bool non_blocking)
    Socket::set_non_blocking(non_blocking);
 }
 
+bool ServerSocket::has_data()
+{
+    return Socket::has_data();
+}
+
 bool ServerSocket::accept ( ServerSocket& sock )
 {
   return Socket::accept(sock);

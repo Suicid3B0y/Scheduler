@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <unistd.h>
@@ -37,6 +38,7 @@ class Socket
   // Data Transimission
   bool send ( const std::string ) const;
   int recv ( std::string& ) const;
+  bool has_data() const;
 
 
   void set_non_blocking ( const bool );
