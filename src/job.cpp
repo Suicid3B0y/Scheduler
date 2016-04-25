@@ -5,20 +5,19 @@ static int jobIdValue = 0;  // FIXME: temporary work-around
 Job::Job() : Job("", 0) {
 }
 
-Job::Job(string command_line, unsigned burst_time)
-        : Job(command_line, burst_time, DEFAULT_USER_PRIORITY, DEFAULT_CPU_LOAD) {
+Job::Job(string command_line, unsigned burst_time) : Job(command_line, burst_time, DEFAULT_USER_PRIORITY,
+                                                         DEFAULT_CPU_LOAD) {
     this->command_line = command_line;
 }
 
-Job::Job(string command_line, unsigned burst_time, int user_priority, int cpu_load)
-        : timestamp{time(nullptr)},
-          isFinished{false},
-          startTime{0},
-          runningTime{0},
-          command_line{command_line},
-          burst_time{burst_time},
-          user_priority{user_priority},
-          cpu_load{cpu_load} {
+Job::Job(string command_line, unsigned burst_time, int user_priority, int cpu_load) : timestamp{time(nullptr)},
+                                                                                      isFinished{false},
+                                                                                      startTime{0},
+                                                                                      runningTime{0},
+                                                                                      command_line{command_line},
+                                                                                      burst_time{burst_time},
+                                                                                      user_priority{user_priority},
+                                                                                      cpu_load{cpu_load} {
     jobId = jobIdValue;  // FIXME: temporary work-around
     jobIdValue++;
 }
