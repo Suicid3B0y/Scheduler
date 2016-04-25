@@ -2,7 +2,7 @@
 #define _H_MESSAGE_HANDLER
 
 #include <iostream>
-#include "scheduler.h"
+#include "constants.h"
 
 
 #define DEFAULT_MESSAGE_HANDLER_CLASS MessageHandler

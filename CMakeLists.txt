@@ -1,15 +1,17 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(GSI_SCHEDULER)
-set(BOOST_INCLUDEDIR  /usr/lib/x86_64-linux-gnu/)
-set(BOOST_LIBRARYDIR /usr/lib/x86_64-linux-gnu/)
+
 find_package(Boost 1.58 REQUIRED COMPONENTS system program_options regex)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 link_directories(${Boost_INCLUDE_DIRS})
 add_executable(scheduler
         src/main.cpp
-        src/job.cpp
-        src/reader.cpp)
+        src/scheduler.cpp
+        src/controller.cpp
+        src/reader.cpp
+        src/job.cpp)
 add_executable(tests
+        src/controller.cpp
         src/tests/tests.cpp
         src/tests/jobTests.cpp
         src/tests/controllerTests.cpp
@@ -18,14 +20,13 @@ add_executable(tests
         src/socket/ServerSocket.cpp
         src/socket/ClientSocket.cpp
         src/job.cpp
-        src/controller.cpp
         src/network.cpp
         src/message_handler.cpp
         )
 target_link_libraries(scheduler ${Boost_LIBRARIES})
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 
-set(CMAKE_CXX_FLAGS "-Wall -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -std=c++14")
+set(CMAKE_CXX_FLAGS "-Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread")
 # Compiler-specific C++11 activation.
 if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     execute_process(

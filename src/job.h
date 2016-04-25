@@ -1,7 +1,7 @@
 #ifndef _H_JOB
 #define _H_JOB
 
-#include "scheduler.h"
+#include "constants.h"
 
 #include <iostream>
 #include <ctime>
@@ -10,12 +10,11 @@
 
 using namespace std;
 
-class Job
-{
-   private:
+class Job {
+private:
     int jobId;
 
-   public:
+public:
     // XXX: Currently public, might be private
     time_t timestamp;
     bool isFinished;   // FIXME: This is a temporary variable for testing purpose only.
@@ -28,26 +27,31 @@ class Job
 
     // Constructors
     Job();
+
     Job(string command_line, int burst_time);
+
     Job(string command_line, int burst_time, int user_priority, int cpu_load);
-    Job& operator=(const Job& other);
+
+    Job &operator=(const Job &other);
 
     // Comparators
     // NOTE: a job CANNOT be equal to another. Then j1 > j2 == !(j1 < j2)
-    friend bool operator==(const Job& left, const Job& right);
+    friend bool operator==(const Job &left, const Job &right);
 
     // Job operations
     int getId() const;
+
     bool start();
+
     bool stop();
 };
 
 typedef shared_ptr<Job> job_ptr;
 
 struct JobPtrOrder {
-    bool operator()(job_ptr const& left, job_ptr const& right) const;
+    bool operator()(job_ptr const &left, job_ptr const &right) const;
 };
-
 typedef priority_queue<job_ptr, vector<job_ptr>, JobPtrOrder> JobQueue;
+
 
 #endif
