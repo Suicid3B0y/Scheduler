@@ -12,7 +12,7 @@ void testController() {
     queue.emplace(p_j2);
     queue.emplace(p_j3);
 
-    Controller controller(queue, 1);
+    Controller controller(queue, 1, 100);
     
     vector<shared_ptr<Job>> runningJobs = controller.updateRunningJobs();  // Should start the job 2
     ASSERT(runningJobs.size() == 1);
