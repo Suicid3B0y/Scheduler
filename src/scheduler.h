@@ -4,14 +4,12 @@
 #include "controller.h"
 #include <chrono>
 #include <thread>
-
 class Scheduler {
 
 private:
     unsigned timeSlice;
     Controller controller;
     bool alive;
-
 public:
     Scheduler();
 
@@ -20,7 +18,6 @@ public:
     Scheduler(Controller controller, unsigned timeSlice);
 
     Scheduler &operator=(const Scheduler &other);
-
     bool isAlive();
 
     int run();
