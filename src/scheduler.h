@@ -1,6 +1,7 @@
 #ifndef _H_SCHEDULER
 #define _H_SCHEDULER
 
+#include "controller.h"
 
 #include <iostream>
 
@@ -10,19 +11,24 @@
  */
 #define DEBUG 1
 
-/* Job constants */
-#define DEFAULT_USER_PRIORITY 0
-#define DEFAULT_CPU_LOAD 100
 
+using namespace std;
 
-/**
- * Project macro definition
- */
-#if DEBUG
-    #define debug(text) std::cerr << text
-#else
-    #define debug(text)
-#endif
+class Scheduler {
 
+private:
+    unsigned timeSlice;
+    Controller controller;
+
+public:
+    Scheduler();
+
+    Scheduler(const Scheduler &other);
+
+    Scheduler(Controller controller, unsigned timeSlice);
+
+    Scheduler &operator=(const Scheduler &other);
+
+};
 
 #endif
