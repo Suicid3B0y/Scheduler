@@ -14,8 +14,8 @@ using namespace std;
 
 class Reader {
 
-public :
-    static std::queue<Job> parseFile(boost::filesystem::path filename);
+public:
+    static std::vector<Job> parseFile(boost::filesystem::path filename);
 
 };
 

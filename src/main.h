@@ -3,6 +3,7 @@
 
 
 #include "scheduler.h"
+#include "constants.h"
 #include "reader.h"
 #include "job.h"
 
@@ -12,5 +13,6 @@
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 
+using namespace std;
 
 #endif

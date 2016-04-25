@@ -1,14 +1,27 @@
 #include "controller.h"
 
-Controller::Controller(JobQueue jobQueue, unsigned int coreNumber)
-    : jobQueue(jobQueue), coreNumber(coreNumber)
-{
+Controller::Controller() : Controller(JobQueue{}, 1, 200) { }
+
+Controller::Controller(const Controller &other) : Controller() {
+    (*this) = other;
+}
+
+Controller::Controller(JobQueue jobQueue, unsigned coreNumber, unsigned timeout) : jobQueue(jobQueue),
+                                                                                   coreNumber(coreNumber),
+                                                                                   timeout(timeout) {
     currentJobs = vector<job_ptr>();
     debug("Controller instantiation" << endl);
 }
 
-vector<shared_ptr<Job> > Controller::updateRunningJobs()
-{
+Controller &Controller::operator=(const Controller &other) {
+    this->jobQueue = other.jobQueue;
+    this->coreNumber = other.coreNumber;
+    this->timeout = other.timeout;
+    this->currentJobs = other.currentJobs;
+    return (*this);
+}
+
+vector<shared_ptr<Job> > Controller::updateRunningJobs() {
     vector<job_ptr> newJobs;
 
     debug("[ ] Updating running jobs" << endl);
@@ -39,4 +52,11 @@ vector<shared_ptr<Job> > Controller::updateRunningJobs()
     currentJobs = newJobs;
 
     return newJobs;
+}
+
+void Controller::updateJobQueue(vector<Job> newJobs) {
+    // TODO : verify this function
+    for (Job &job: newJobs) {
+        this->jobQueue.push(std::make_shared<Job>(job));
+    }
 }

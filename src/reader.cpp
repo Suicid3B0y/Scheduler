@@ -1,6 +1,6 @@
 #include "reader.h"
 
-queue<Job> Reader::parseFile(boost::filesystem::path filename) {
+std::vector<Job> Reader::parseFile(boost::filesystem::path filename) {
 
     // stream pour le fichier
     ifstream file;
@@ -11,7 +11,7 @@ queue<Job> Reader::parseFile(boost::filesystem::path filename) {
         throw "Impossible de charger le fichier";
     }
 
-    queue<Job> job_queue;
+    std::vector<Job> jobs;
 
     string line, commande_line;
     int burst_time, user_priority, cpu_load;
@@ -30,13 +30,13 @@ queue<Job> Reader::parseFile(boost::filesystem::path filename) {
 
         Job job = Job(commande_line, burst_time, user_priority, cpu_load);
 
-        job_queue.push(job);
+        jobs.push_back(job);
 
     }
 
     file.close();
 
-    return job_queue;
+    return jobs;
 
 
 }
