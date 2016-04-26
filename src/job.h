@@ -21,16 +21,16 @@ public:
     time_t startTime;  // NOTE: must be set to 0 if the job is not running
     time_t runningTime;
     string command_line;
-    int burst_time;
+    unsigned burst_time;
     int user_priority;
     int cpu_load;
 
     // Constructors
     Job();
 
-    Job(string command_line, int burst_time);
+    Job(string command_line, unsigned burst_time);
 
-    Job(string command_line, int burst_time, int user_priority, int cpu_load);
+    Job(string command_line, unsigned burst_time, int user_priority, int cpu_load);
 
     Job &operator=(const Job &other);
 
