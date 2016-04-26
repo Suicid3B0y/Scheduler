@@ -26,15 +26,6 @@ void testNetworkServer()
     }
     ASSERT(serv.get_clients().size() == 1);
 
-    // We do not need to automatically handle the messages. So stop this !
-    serv.get_clients()[0]->stop();
-
-    // Try to send a short message, for testing purpose only
-    client_socket << to_send.encoded_message_length() + (string)to_send;
-    BaseMessage received(serv.get_clients()[0]->get_message(42));
-    ASSERT((string)received == (string)to_send);
-
-
     serv.stop();
 }
 
