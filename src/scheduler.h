@@ -2,6 +2,8 @@
 #define _H_SCHEDULER
 
 #include "controller.h"
+#include <chrono>
+#include <thread>
 
 #include <iostream>
 
@@ -19,6 +21,7 @@ class Scheduler {
 private:
     unsigned timeSlice;
     Controller controller;
+    bool alive;
 
 public:
     Scheduler();
@@ -29,6 +32,9 @@ public:
 
     Scheduler &operator=(const Scheduler &other);
 
+    bool isAlive();
+
+    int run();
 };
 
 #endif

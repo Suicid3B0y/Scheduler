@@ -14,7 +14,8 @@ std::vector<Job> Reader::parseFile(boost::filesystem::path filename) {
     std::vector<Job> jobs;
 
     string line, commande_line;
-    int burst_time, user_priority, cpu_load;
+    unsigned burst_time;
+    int user_priority, cpu_load;
 
     // Traitement du nuage
     while (getline(file, line)) {

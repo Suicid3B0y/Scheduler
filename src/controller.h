@@ -3,6 +3,7 @@
 
 #include "constants.h"
 #include "job.h"
+#include <chrono>
 
 #include <vector>
 #include <algorithm>
@@ -21,7 +22,7 @@ public:
 
     Controller(const Controller &other);
 
-    Controller(JobQueue jobQueue, unsigned coreNumber, unsigned timeout);
+    Controller(JobQueue jobQueue, unsigned coreNumber,  unsigned timeout);
 
     Controller &operator=(const Controller &other);
 
