@@ -5,8 +5,6 @@
 #include <chrono>
 #include <thread>
 
-using namespace std;
-
 class Scheduler {
 
 private:
