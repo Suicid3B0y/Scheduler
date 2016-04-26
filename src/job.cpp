@@ -8,8 +8,8 @@ static int jobIdValue = 0;  // FIXME: temporary work-around
 Job::Job() : Job("", 0) {
 }
 
-Job::Job(string command_line, unsigned burst_time) : Job(command_line, burst_time, DEFAULT_USER_PRIORITY,
-                                                         DEFAULT_CPU_LOAD) {
+Job::Job(string command_line, unsigned burst_time)
+        : Job(command_line, burst_time, DEFAULT_USER_PRIORITY, DEFAULT_CPU_LOAD) {
     this->command_line = command_line;
 }
 
