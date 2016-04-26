@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
     po::options_description queue("Queue options");
     config.add_options()
             ("time-slice,s", po::value<unsigned>(&time_slice)->default_value(100),
-             "time elapsed between too priority check")
+             "time elapsed between too priority check in milliseconds")
             ("core-number,c", po::value<unsigned>(&core_number)->default_value(1),
              "number of cores used by the scheduler")
             ("timeout,t", po::value<unsigned>(&timeout)->default_value(0),
@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
             vector<Job> newJobs = Reader::parseFile(input_filepath);
             controller.updateJobQueue(newJobs);
 
-            // TODO : LAUNCH SCHEDULING WITH QUEUE FEED ON INPUT FILE
+            scheduler.run();
 
         } else {
             cerr << "No file specified, please use -i (or --input-file) option to specify a filepath" << endl;
