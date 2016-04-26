@@ -4,6 +4,7 @@
 #include "controller.h"
 #include <chrono>
 #include <thread>
+#include <iostream>
 
 #include <iostream>
 
@@ -15,6 +16,12 @@
 
 
 using namespace std;
+
+/**
+ * Project constants definition
+ */
+#define DEBUG 1
+
 
 class Scheduler {
 
