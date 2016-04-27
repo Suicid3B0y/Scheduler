@@ -29,9 +29,7 @@ std::vector<Job> Reader::parseFile(boost::filesystem::path filename) {
         cout << "User priority: " << user_priority << endl;
         cout << "CPU load: " << cpu_load << endl;
 
-        Job job = Job(commande_line, burst_time, user_priority, cpu_load);
-
-        jobs.push_back(job);
+        jobs.push_back(Job(commande_line, burst_time, user_priority, cpu_load));
 
     }
 
