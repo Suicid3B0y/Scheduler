@@ -13,11 +13,11 @@ using namespace std;
 class Job {
 private:
     int jobId;
+    int jobPid;
 
 public:
     // XXX: Currently public, might be private
     time_t timestamp;
-    bool isFinished;   // FIXME: This is a temporary variable for testing purpose only.
     time_t startTime;  // NOTE: must be set to 0 if the job is not running
     time_t runningTime;
     string command_line;
@@ -32,14 +32,20 @@ public:
 
     Job(string command_line, unsigned burst_time, int user_priority, int cpu_load);
 
+    ~Job() { debug("[-] Destructor of " << command_line << endl); };
+
     Job &operator=(const Job &other);
 
     // Comparators
     // NOTE: a job CANNOT be equal to another. Then j1 > j2 == !(j1 < j2)
     friend bool operator==(const Job &left, const Job &right);
 
+    bool isFinished() const;
+
     // Job operations
     int getId() const;
+
+    int getPid() const;
 
     bool start();
 

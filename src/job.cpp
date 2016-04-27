@@ -1,3 +1,5 @@
+#include <unistd.h>
+#include <sys/wait.h>
 #include "job.h"
 
 static int jobIdValue = 0;  // FIXME: temporary work-around
@@ -12,7 +14,6 @@ Job::Job(string command_line, unsigned burst_time)
 
 Job::Job(string command_line, unsigned burst_time, int user_priority, int cpu_load)
         : timestamp{time(nullptr)},
-          isFinished{false},
           startTime{0},
           runningTime{0},
           command_line{command_line},
@@ -29,7 +30,6 @@ Job &Job::operator=(const Job &other) {
     user_priority = other.user_priority;
     cpu_load = other.cpu_load;
     timestamp = other.timestamp;
-    isFinished = other.isFinished;
     startTime = other.startTime;
     runningTime = other.runningTime;
 
@@ -44,11 +44,26 @@ int Job::getId() const {
     return jobId;
 }
 
+int Job::getPid() const {
+    return jobPid;
+}
+
 bool Job::start() {
     startTime = time(nullptr);
     debug("Starting the job " << command_line << " time:" << startTime << endl);
 
     // TODO: start the process...
+
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        exit(1);
+    } else if (pid == 0) {
+        system("ls -l /home/tom/");
+        exit(0);
+    } else {
+        this->jobPid=pid;
+    }
     return true;
 }
 
@@ -60,6 +75,12 @@ bool Job::stop() {
 
     // TODO: stop the process...
     return true;
+}
+
+bool Job::isFinished() const {
+    int status;
+    pid_t result = waitpid(this->getPid(), &status, WNOHANG);
+    return (result != 0);
 }
 
 bool JobPtrOrder::operator()(job_ptr const &left, job_ptr const &right) const {
