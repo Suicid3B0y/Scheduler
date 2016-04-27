@@ -18,7 +18,6 @@ std::vector<Job> Reader::parseFile(boost::filesystem::path filename) {
     while (getline(file, line)) {
         Job job = Reader::parseString(line);
         jobs.push_back(job);
-
     }
 
     file.close();

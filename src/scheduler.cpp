@@ -34,7 +34,6 @@ int Scheduler::run() {
     return 0;
 }
 
-
 void Scheduler::start() {
     std::thread tmp(&Scheduler::run, this);
     listening_thread = std::move(tmp);

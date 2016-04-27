@@ -34,6 +34,8 @@ public:
 
     ~Job() { debug("[-] Destructor of " << command_line << endl); };
 
+    ~Job() { debug("[-] Destructor of " << command_line << endl); };
+
     Job &operator=(const Job &other);
 
     // Comparators

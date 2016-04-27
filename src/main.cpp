@@ -47,7 +47,6 @@ int main(int argc, char **argv) {
 
     if (vm.count("input-file")) {
         debug("Input file: " << input_filepath << endl);
-
         vector<Job> newJobs = Reader::parseFile(input_filepath);
         scheduler.controller.updateJobQueue(newJobs);
     }
