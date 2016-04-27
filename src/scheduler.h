@@ -11,15 +11,16 @@ class Scheduler {
 
 private:
     unsigned timeSlice;
-    Controller controller;
+
     bool alive;
 
 public:
+    Controller controller;
     Scheduler();
 
     Scheduler(const Scheduler &other);
 
-    Scheduler(Controller controller, unsigned timeSlice);
+    Scheduler(unsigned core_number, unsigned timeout, unsigned timeSlice);
 
     Scheduler &operator=(const Scheduler &other);
 

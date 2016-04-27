@@ -28,7 +28,7 @@ public:
 
     vector<job_ptr> updateRunningJobs();
 
-    void updateJobQueue(vector<Job> newJobs);
+    void updateJobQueue(vector<Job>& newJobs);
 };
 
 #endif

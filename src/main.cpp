@@ -64,17 +64,14 @@ int main(int argc, char **argv) {
         exit(200);
     }
 
-    JobQueue job_queue;
-    Controller controller(job_queue, core_number, timeout);
-    Scheduler scheduler(controller, time_slice);
+    Scheduler scheduler(core_number, timeout, time_slice);
 
     if (vm.count("file-startup")) {
         if (vm.count("input-file")) {
             debug("Input file: " << input_filepath << endl);
 
             vector<Job> newJobs = Reader::parseFile(input_filepath);
-            controller.updateJobQueue(newJobs);
-
+            scheduler.controller.updateJobQueue(newJobs);
             scheduler.run();
 
         } else {
