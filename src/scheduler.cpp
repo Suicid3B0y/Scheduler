@@ -6,8 +6,11 @@ Scheduler::Scheduler(const Scheduler &other) : Scheduler() {
     (*this) = other;
 }
 
-Scheduler::Scheduler(Controller controller, unsigned timeSlice) : controller(controller), timeSlice(timeSlice), alive(true) {
+Scheduler::Scheduler(unsigned core_number, unsigned timeout, unsigned timeSlice) : timeSlice(timeSlice), alive(true) {
     debug("Scheduler instantiation" << endl);
+    JobQueue job_queue;
+    Controller controller(job_queue, core_number, timeout);
+    this->controller = controller;
 }
 
 Scheduler &Scheduler::operator=(const Scheduler &other) {
@@ -29,3 +32,4 @@ int Scheduler::run() {
     }
     return 0;
 }
+
