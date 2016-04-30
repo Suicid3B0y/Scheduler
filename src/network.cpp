@@ -28,6 +28,14 @@ NetworkEntity::NetworkEntity(const NetworkEntity &entity) :
 {
 }
 
+NetworkEntity::~NetworkEntity()
+{
+    if (is_started) {
+        is_started = false;
+        listening_thread.join();
+    }
+}
+
 NetworkEntity& NetworkEntity::operator=(const NetworkEntity &entity)
 {
     socket = entity.socket;
@@ -147,18 +155,20 @@ NetworkEntity& operator<<(NetworkEntity &output_entity, const BaseMessage &messa
 NetworkServer::NetworkServer(const unsigned short port, MessageHandler &handler)
     : server{}, clients{}, handler{handler}, is_alive{false}
 {
-    server.set_non_blocking(true);
     server.bind_to(port);
 }
 
 void NetworkServer::do_accept()
 {
+    server.set_non_blocking(true);
+
     while (is_alive) {
         Socket client_socket;
-        if (server.accept(client_socket))
+        if (server.accept(client_socket)) {
             handle_accept(client_socket);
-        else
+        } else {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
     }
 }
 

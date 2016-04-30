@@ -7,7 +7,7 @@ using namespace std;
 void testNetworkServer()
 {
     MessageHandler handler;
-    NetworkServer serv(4243, handler);
+    NetworkServer serv(4251, handler);
     BaseMessage to_send(42, "hello");
 
     // Start the server
@@ -15,12 +15,12 @@ void testNetworkServer()
     ASSERT(serv.get_clients().size() == 0);
 
     // Initialize a client connection, test if it's well handled
-    ClientSocket client_socket("127.0.0.1", 4243);
+    Socket client_socket("127.0.0.1", 4251);
     {
         int attempts = 10;
         while (attempts && !serv.get_clients().size())
         {
-            this_thread::sleep_for(1s);
+            this_thread::sleep_for(0.1s);
             --attempts;
         }
     }
@@ -34,38 +34,40 @@ void testNetworkServer()
 class FakeServer
 {
     private:
-        ServerSocket server;
-        std::shared_ptr<ServerSocket> p_client_socket;
+        Socket server;
+        Socket client_socket;
+        unsigned port;
         thread t;
 
     public:
-        FakeServer(): server{ServerSocket(4242)}, p_client_socket{std::shared_ptr<ServerSocket>{new ServerSocket()}}, t{}
+        FakeServer(unsigned port): server{Socket{}}, client_socket{Socket{}}, t{}, port{port}
         {
+            server.bind_to(port);
             thread subt(&FakeServer::handle_acceptance, this);
             t = std::move(subt);
         }
 
         void handle_acceptance()
         {
-            server.accept(p_client_socket);
+            server.accept(client_socket);
         }
 
-        std::shared_ptr<ServerSocket> get_remote()
+        Socket get_remote()
         {
             t.join();
-            return p_client_socket;
+            return client_socket;
         }
 
 };
 
 void testNetworkEntityManipulations() {
-    FakeServer serv{};
+    FakeServer serv{4250};
     BaseMessage to_send(42, "hello");
 
     // Simulate a socket connection
-    ClientSocket client_socket("127.0.0.1", 4242);
-    std::shared_ptr<ServerSocket> p_server_socket = serv.get_remote();
-    NetworkEntity entity(p_server_socket, "127.0.0.1", make_shared<MessageHandler>(MessageHandler{}));
+    Socket client_socket("127.0.0.1", 4250);
+    Socket server_socket = serv.get_remote();
+    NetworkEntity entity(server_socket, MessageHandler{}, "127.0.0.1", 0);
 
     // Send a message from the client to the server
     client_socket << to_send.encoded_message_length() << to_send;
@@ -80,20 +82,20 @@ void testNetworkEntityManipulations() {
 }
 
 void testSockets() {
-    FakeServer serv{};
+    FakeServer serv{4249};
 
     // Simulate a socket connection
-    ClientSocket client_socket("127.0.0.1", 4242);
-    std::shared_ptr<ServerSocket> server_socket = serv.get_remote();
+    Socket client_socket("127.0.0.1", 4249);
+    Socket server_socket = serv.get_remote();
     string received;
 
     // Send a message from the client to the server
     client_socket << BaseMessage(42, "hello");
-    (*server_socket) >> received;
+    server_socket >> received;
     ASSERT(received == "*hello");
 
     // Send a message from the server to the client
-    (*server_socket) << BaseMessage(42, "hello");
+    server_socket << BaseMessage(42, "hello");
     client_socket >> received;
     ASSERT(received == "*hello");
 }

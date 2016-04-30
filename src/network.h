@@ -86,7 +86,6 @@ class NetworkEntity
         void wait_new_messages();
 
     protected:
-        NetworkEntity(const Socket &socket, const MessageHandler &handler, const std::string endpoint_addr, const unsigned port);
         void start();
         void close();  // NetworkEntity should be destructed after using this function.
 
@@ -94,6 +93,8 @@ class NetworkEntity
         NetworkEntity();
         NetworkEntity(const NetworkEntity &entity);
         NetworkEntity& operator=(const NetworkEntity &entity);
+        NetworkEntity(const Socket &socket, const MessageHandler &handler, const std::string endpoint_addr, const unsigned port);
+        ~NetworkEntity();
         bool operator==(const NetworkEntity &entity); // TODO
 
         bool is_alive();
