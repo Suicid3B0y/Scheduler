@@ -15,41 +15,44 @@
  * =====================================================================================
  */
 #include "network.h"
-// ----------------------------------------------------------------------------
 
 NetworkEntity::NetworkEntity() :
-    p_socket{std::shared_ptr<ServerSocket>()}, endpoint_addr{MY_HOST},
-    p_handler{std::shared_ptr<MessageHandler>()}, local_buffer{},
-    is_started{false}
+    socket{}, handler{},
+    endpoint_addr{MY_HOST}, port{},
+    local_buffer{}, is_started{false}
+{
+}
+
+NetworkEntity::NetworkEntity(const NetworkEntity &entity) :
+    NetworkEntity(entity.socket, entity.handler, entity.endpoint_addr, entity.port)
 {
 }
 
 NetworkEntity::~NetworkEntity()
 {
-}
-
-NetworkEntity::NetworkEntity(const NetworkEntity &entity) :
-    NetworkEntity(entity.p_socket, entity.endpoint_addr, entity.p_handler)
-{
-    local_buffer = entity.local_buffer;
-}
-
-NetworkEntity::NetworkEntity(const std::shared_ptr<ServerSocket> &p_socket, const std::string endpoint_addr, const std::shared_ptr<MessageHandler> p_handler)
-    : NetworkEntity()
-{
-    this->p_socket = p_socket;
-    this->endpoint_addr = endpoint_addr;
-    this->p_handler = p_handler;
+    if (is_started) {
+        is_started = false;
+        listening_thread.join();
+    }
 }
 
 NetworkEntity& NetworkEntity::operator=(const NetworkEntity &entity)
 {
-    p_socket = entity.p_socket;
+    socket = entity.socket;
     endpoint_addr = entity.endpoint_addr;
-    p_handler = entity.p_handler;
+    handler = entity.handler;
     local_buffer = entity.local_buffer;
 
     return (*this);
+}
+
+NetworkEntity::NetworkEntity(const Socket &socket, const MessageHandler &handler, const std::string endpoint_addr, const unsigned port)
+    : NetworkEntity()
+{
+    this->socket = socket;
+    this->handler = handler;
+    this->endpoint_addr = endpoint_addr;
+    this->port = port;
 }
 
 unsigned NetworkEntity::get_message_length(int timeout)
@@ -59,7 +62,7 @@ unsigned NetworkEntity::get_message_length(int timeout)
 
     while (data.length() < 4) {
         std::string tmp;
-        *p_socket.get() >> tmp;
+        socket >> tmp;
         data += tmp;
     }
 
@@ -73,32 +76,13 @@ unsigned NetworkEntity::get_message_length(int timeout)
     return sum;
 }
 
-BaseMessage NetworkEntity::get_message(int timeout)
-{
-    unsigned length = get_message_length(timeout);
-    std::string data = local_buffer;
-
-    while (data.length() < length)
-    {
-        std::string tmp;
-        *p_socket >> tmp;
-        data = tmp;
-    }
-
-    if (data.length() > length)
-        local_buffer = data.substr(length);
-
-    BaseMessage m{data};
-    return m;
-}
-
 void NetworkEntity::wait_new_messages()
 {
     try {
         while (is_started) {
             if (has_data()) {
                 BaseMessage message{get_message(0)};
-                p_handler->handle_message(message);
+                handler.handle_message(message);
             } else {
                 std::this_thread::sleep_for(std::chrono::seconds(1));
             }
@@ -110,24 +94,43 @@ void NetworkEntity::wait_new_messages()
 
 void NetworkEntity::start()
 {
-
-    // http://stackoverflow.com/questions/10673585/start-thread-with-member-function
     std::thread tmp(&NetworkEntity::wait_new_messages, this);
     listening_thread = std::move(tmp);
     is_started = true;
 }
 
-void NetworkEntity::stop()
+void NetworkEntity::close()
 {
     if (is_started) {
         is_started = false;
         listening_thread.join();
     }
+
+    socket.close();
+}
+
+BaseMessage NetworkEntity::get_message(int timeout)
+{
+    unsigned length = get_message_length(timeout);
+    std::string data = local_buffer;
+
+    while (data.length() < length)
+    {
+        std::string tmp;
+        socket >> tmp;
+        data = tmp;
+    }
+
+    if (data.length() > length)
+        local_buffer = data.substr(length);
+
+    BaseMessage m{data};
+    return m;
 }
 
 bool NetworkEntity::is_alive()
 {
-    return true; // TODO
+    return is_started; // FIXME: devrait vérifier que la socket est toujours valide.
 }
 
 bool NetworkEntity::is_me()
@@ -137,78 +140,48 @@ bool NetworkEntity::is_me()
 
 bool NetworkEntity::has_data()
 {
-    return p_socket->has_data();
+    return socket.has_data();
 }
 
 NetworkEntity& operator<<(NetworkEntity &output_entity, const BaseMessage &message)
 {
-    (*output_entity.p_socket.get()) << message.encoded_message_length() << message;
+    output_entity.socket << message.encoded_message_length() << message;
     return output_entity;
 }
 
 // ----------------------------------------------------------------------------
 
-NetworkServer::NetworkServer()
+
+NetworkServer::NetworkServer(const unsigned short port, MessageHandler &handler)
+    : server{}, clients{}, handler{handler}, is_alive{false}
 {
-}
-
-NetworkServer::NetworkServer(NetworkServer &network_server)
-    : server{network_server.server},
-      clients{std::vector< std::shared_ptr<NetworkEntity> >()},
-      p_handler{network_server.p_handler},
-      is_alive{false}
-{
-    clients.reserve(network_server.clients.size());
-
-    for (unsigned i = 0; i < network_server.clients.size(); ++i) {
-        clients.push_back(network_server.clients[i]);
-    }
-}
-
-NetworkServer& NetworkServer::operator=(NetworkServer &network_server)
-{
-    NetworkServer tmp(network_server);
-
-    server = tmp.server;
-    clients = tmp.clients;
-    p_handler = tmp.p_handler;
-    is_alive = tmp.is_alive;
-
-    return (*this);
-}
-
-NetworkServer::NetworkServer(const short port, MessageHandler &handler)
-    : server{ServerSocket(port)},
-      clients{std::vector< std::shared_ptr<NetworkEntity> >()},
-      p_handler{std::make_shared<MessageHandler>(handler)},
-      is_alive{false}
-{
-    server.set_non_blocking(true);
+    server.bind_to(port);
 }
 
 void NetworkServer::do_accept()
 {
+    server.set_non_blocking(true);
+
     while (is_alive) {
-        std::shared_ptr<ServerSocket> p_client_socket = std::make_shared<ServerSocket>(ServerSocket{});
-        if (server.accept(p_client_socket))
-            handle_accept(p_client_socket);
-        else
-            std::this_thread::sleep_for(std::chrono::seconds(1));
+        Socket client_socket;
+        if (server.accept(client_socket)) {
+            handle_accept(client_socket);
+        } else {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
     }
 }
 
-void NetworkServer::handle_accept(std::shared_ptr<ServerSocket> &p_client_socket)
+void NetworkServer::handle_accept(Socket &client_socket)
 {
-    std::shared_ptr<NetworkEntity> entity = std::make_shared<NetworkEntity>(NetworkEntity(p_client_socket, "todo", p_handler));  // TODO
-    clients.push_back(entity);
-    entity->start();
+    std::unique_ptr<NetworkEntity> entity = std::make_unique<NetworkEntity>(NetworkEntity{client_socket, handler, "todo", 42});  // TODO
+    clients.push_back(std::move(entity));
+    clients.back()->start();
 }
 
 void NetworkServer::start()
 {
     is_alive = true;
-
-    // http://stackoverflow.com/questions/10673585/start-thread-with-member-function
     std::thread tmp(&NetworkServer::do_accept, this);
     accept_thread = std::move(tmp);
 }
@@ -217,21 +190,36 @@ void NetworkServer::stop()
 {
     is_alive = false;
 
-    for (unsigned i = 0; i < clients.size(); ++i) {
-        clients[i]->stop();
-    }
-
-    // FIXME: might require a fake connection initialization here.
     accept_thread.join();
 }
 
-std::vector< std::shared_ptr<NetworkEntity> > NetworkServer::get_clients()
+void NetworkServer::close()
 {
-    std::vector< std::shared_ptr<NetworkEntity> > res;
+    for (unsigned i = 0; i < clients.size(); ++i) {
+        clients[i]->close();
+    }
+
+    clients.empty();
+}
+
+NetworkEntity NetworkServer::connect_to(const std::string endpoint_addr, const unsigned short port)
+{
+    Socket socket{endpoint_addr, port};
+
+    std::unique_ptr<NetworkEntity> entity{new NetworkEntity{socket, handler, endpoint_addr, port}};
+    clients.push_back(std::move(entity));
+    entity->start();
+
+    return NetworkEntity(*entity); // Returns a copy ; we do not want to modify the original in any cases
+}
+
+std::vector<NetworkEntity> NetworkServer::get_clients()
+{
+    std::vector<NetworkEntity> res;
     res.reserve(clients.size());
 
     for (unsigned i = 0; i < clients.size(); ++i)
-        res.push_back(std::shared_ptr<NetworkEntity>(clients[i]));
+        res.push_back(NetworkEntity(*clients[i]));
 
     return res;
 }
