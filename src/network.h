@@ -72,63 +72,64 @@ class NetworkServer;
 
 class NetworkEntity
 {
-    private:
-        Socket socket;
-        MessageHandler handler;
-        std::string endpoint_addr;
-        unsigned port;
+private:
+    Socket socket;
+    MessageHandler handler;
+    std::string endpoint_addr;
+    unsigned port;
 
-        std::string local_buffer;  // Should not harm chickens...
-        bool is_started;
-        std::thread listening_thread;
+    std::string local_buffer;  // Should not harm chickens...
+    bool is_started;
+    std::thread listening_thread;
 
-        unsigned get_message_length(int timemout);  // NOTE: timeout is not supported right now (blocking IO)
-        void wait_new_messages();
+    unsigned get_message_length(int timemout);  // NOTE: timeout is not supported right now (blocking IO)
+    void wait_new_messages();
 
-    protected:
-        NetworkEntity(const Socket &socket, const MessageHandler &handler, const std::string endpoint_addr, const unsigned port);
-        void start();
-        void close();  // NetworkEntity should be destructed after using this function.
+protected:
+    void start();
+    void close();  // NetworkEntity should be destructed after using this function.
 
-    public:
-        NetworkEntity();
-        NetworkEntity(const NetworkEntity &entity);
-        NetworkEntity& operator=(const NetworkEntity &entity);
-        bool operator==(const NetworkEntity &entity); // TODO
+public:
+    NetworkEntity();
+    NetworkEntity(const NetworkEntity &entity);
+    NetworkEntity& operator=(const NetworkEntity &entity);
+    NetworkEntity(const Socket &socket, const MessageHandler &handler, const std::string endpoint_addr, const unsigned port);
+    ~NetworkEntity();
+    bool operator==(const NetworkEntity &entity); // TODO
 
-        bool is_alive();
-        bool has_data();
-        bool is_me();
-        BaseMessage get_message(int timeout);  // NOTE: timeout is not supported right now (blocking IO)
+    bool is_alive();
+    bool has_data();
+    bool is_me();
+    BaseMessage get_message(int timeout);  // NOTE: timeout is not supported right now (blocking IO)
 
-        friend NetworkEntity& operator<<(NetworkEntity& output_entity, const BaseMessage &message);
-        friend class NetworkServer;
+    friend NetworkEntity& operator<<(NetworkEntity& output_entity, const BaseMessage &message);
+    friend class NetworkServer;
 };
 
 
 // NOTE: to close properly the server, you MUST .stop() and .close() him.
 class NetworkServer
 {
-    private:
-        Socket server;
-        std::vector< std::unique_ptr<NetworkEntity> > clients;
-        MessageHandler handler;
-        bool is_alive;
-        std::thread accept_thread;
+private:
+    Socket server;
+    std::vector< std::unique_ptr<NetworkEntity> > clients;
+    MessageHandler handler;
+    bool is_alive;
+    std::thread accept_thread;
 
-        void do_accept();
-        void handle_accept(Socket &socket);
+    void do_accept();
+    void handle_accept(Socket &socket);
 
-    public:
-        NetworkServer(const unsigned short port, MessageHandler &handler);
+public:
+    NetworkServer(const unsigned short port, MessageHandler &handler);
 
-        void start();
-        void stop();
-        void close();
-        void close_connection(NetworkEntity &entity);
+    void start();
+    void stop();
+    void close();
+    void close_connection(NetworkEntity &entity);
 
-        NetworkEntity connect_to(const std::string endpoint_addr, const unsigned short port);
-        std::vector<NetworkEntity> get_clients();
+    NetworkEntity connect_to(const std::string endpoint_addr, const unsigned short port);
+    std::vector<NetworkEntity> get_clients();
 };
 
 

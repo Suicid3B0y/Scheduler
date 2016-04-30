@@ -20,6 +20,7 @@ add_executable(tests
         src/tests/tests.cpp
         src/tests/jobTests.cpp
         src/tests/controllerTests.cpp
+        src/tests/networkTests.cpp
         src/tests/socketTests.cpp
         src/socket/Socket.cpp
         src/job.cpp
