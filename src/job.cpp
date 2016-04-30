@@ -12,7 +12,7 @@ Job::Job(string command_line, unsigned burst_time)
     this->command_line = command_line;
 }
 
-Job::Job(string command_line, unsigned burst_time, int user_priority, int cpu_load)
+Job::Job(string command_line, unsigned burst_time, int user_priority, unsigned cpu_load)
         : timestamp{time(nullptr)},
           startTime{0},
           runningTime{0},

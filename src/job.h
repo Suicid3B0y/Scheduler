@@ -23,14 +23,14 @@ public:
     string command_line;
     unsigned burst_time;
     int user_priority;
-    int cpu_load;
+    unsigned cpu_load;
 
     // Constructors
     Job();
 
     Job(string command_line, unsigned burst_time);
 
-    Job(string command_line, unsigned burst_time, int user_priority, int cpu_load);
+    Job(string command_line, unsigned burst_time, int user_priority, unsigned cpu_load);
 
     ~Job() { debug("[-] Destructor of " << command_line << endl); };
 

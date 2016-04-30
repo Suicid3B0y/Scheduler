@@ -16,6 +16,7 @@ class Reader {
 
 public:
     static std::vector<Job> parseFile(boost::filesystem::path filename);
+    static Job parseString(const std::string string);
 
 };
 
