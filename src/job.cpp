@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <sys/wait.h>
+#include <stdarg.h>
 #include "job.h"
 
 static int jobIdValue = 0;  // FIXME: temporary work-around
@@ -50,21 +51,24 @@ int Job::getPid() const {
 
 bool Job::start() {
     startTime = time(nullptr);
-    debug("Starting the job " << command_line << " time:" << startTime << endl);
+    if (runningTime == 0) {
+        debug("[ ] Starting the job " << command_line << " time:" << startTime << endl);
+        pid_t pid = fork();
 
-    // TODO: start the process...
-
-    pid_t pid = fork();
-
-    if (pid < 0) {
-        exit(1);
-    } else if (pid == 0) {
-        system("ls -l /home/tom/");
-        exit(0);
-    } else {
-        this->jobPid=pid;
+        if (pid < 0) {
+            exit(1);
+        } else if (pid == 0) {
+            execlp("/bin/sh", "/bin/sh", "-c", command_line.c_str(), (char *)NULL);
+            exit(0);
+        } else {
+            this->jobPid = pid;
+        }
+        return true;
+    } else { // Job déjà start
+        debug("[ ] Restarting the job " << command_line << " time:" << startTime << " already runned for:" << runningTime << endl);
+        kill(this->jobPid, SIGCONT);
+        return true;
     }
-    return true;
 }
 
 bool Job::stop() {
@@ -72,6 +76,8 @@ bool Job::stop() {
     debug("Stopping the job " << command_line << " (was running during "
           << time(nullptr) - startTime << " seconds)" << endl);
     startTime = 0;
+
+    kill(this->jobPid, SIGSTOP);
 
     // TODO: stop the process...
     return true;
