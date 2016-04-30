@@ -1,58 +1,69 @@
-// Definition of the Socket class
-
-#ifndef Socket_class
-#define Socket_class
+#ifndef _H_SOCKET_SOCKET
+#define _H_SOCKET_SOCKET
 
 
-#include <iostream>
+#include <errno.h>
+#include <fcntl.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <string>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
-#include <netinet/in.h>
-#include <netdb.h>
 #include <unistd.h>
-#include <string>
 #include <arpa/inet.h>
 #include <memory>
 
+#include "../scheduler.h"
+#include "SocketException.h"
 
-const int MAXHOSTNAME = 200;
+
+const int MAXHOSTNAME    = 200;
 const int MAXCONNECTIONS = 5;
-const int MAXRECV = 500;
+const int MAXRECV        = 500;
 
+
+// Warning: do not forget to close sockets !
 class Socket
 {
- public:
-  Socket();
-  virtual ~Socket();
+    private:
+        int m_sock;
+        sockaddr_in m_addr;
+        bool is_server_socket;
 
-  // Server initialization
-  bool create();
-  bool bind ( const int port );
-  bool listen() const;
-  bool accept ( Socket& ) const;
+    protected:
+        bool create();
+        bool bind(const unsigned port);
+        bool listen() const;
 
-  // Client initialization
-  bool connect ( const std::string host, const int port );
+    public:
+        Socket(); // Initialization of a basic socket.
+        Socket(const Socket &socket);
+        Socket& operator=(const Socket &socket);
+        Socket(const std::string host, const unsigned port);  // Initialize a socket and auto-connect to a remote endpoint
+        virtual ~Socket();
 
-  // Data Transimission
-  bool send ( const std::string ) const;
-  int recv ( std::string& ) const;
-  bool has_data() const;
+        bool is_valid() const;
 
+        // Server side utils
+        void bind_to(const unsigned port);
+        bool accept(Socket& remote_socket) const;
 
-  void set_non_blocking ( const bool );
-  sockaddr_in get_addr() const {return m_addr; }
+        // Client side utils
+        bool connect(const std::string host, const unsigned port);
 
-  bool is_valid() const { return m_sock != -1; }
+        // Socket configuration
+        void set_non_blocking(const bool blocking);
 
- protected:
+        // Data Transimission
+        bool has_data() const;
+        bool send(const std::string data) const;
+        bool recv(std::string& data) const;
+        const Socket& operator<<(const std::string& data) const;
+        const Socket& operator>>(std::string& data) const;
 
-  int m_sock;
-  sockaddr_in m_addr;
-
-
+        void close();
 };
-
 
 #endif

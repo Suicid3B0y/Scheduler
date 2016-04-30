@@ -8,8 +8,7 @@
 #include "common.h"
 #include "../network.h"
 #include "../message_handler.h"
-#include "../socket/ServerSocket.h"
-#include "../socket/ClientSocket.h"
+#include "../socket/Socket.h"
 
 
 void runNetworkSuite();

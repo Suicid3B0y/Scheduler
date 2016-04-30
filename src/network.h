@@ -57,69 +57,80 @@
 #include <list>
 #include <vector>
 
-#include "socket/ServerSocket.h"
 #include "scheduler.h"
 #include "message_handler.h"
+#include "socket/Socket.h"
 
 
 #define MY_HOST "::1"
 #define DEFAULT_LISTENING_PORT 4242
 
 
+class NetworkEntity;
+class NetworkServer;
+
+
 class NetworkEntity
 {
     private:
-        std::shared_ptr<ServerSocket> p_socket;
+        Socket socket;
+        MessageHandler handler;
         std::string endpoint_addr;
-        std::shared_ptr<MessageHandler> p_handler;
-        std::string local_buffer;  // FIXME: might actually do some errors if not shared with other instances / copy of
-                                   //        the same entity.
+        unsigned port;
+
+        std::string local_buffer;  // Should not harm chickens...
         bool is_started;
         std::thread listening_thread;
 
         unsigned get_message_length(int timemout);  // NOTE: timeout is not supported right now (blocking IO)
         void wait_new_messages();
 
+    protected:
+        void start();
+        void close();  // NetworkEntity should be destructed after using this function.
+
     public:
         NetworkEntity();
-        ~NetworkEntity();
         NetworkEntity(const NetworkEntity &entity);
         NetworkEntity& operator=(const NetworkEntity &entity);
-        NetworkEntity(const std::shared_ptr<ServerSocket> &p_socket, const std::string endpoint_addr, const std::shared_ptr<MessageHandler> handler);
+        NetworkEntity(const Socket &socket, const MessageHandler &handler, const std::string endpoint_addr, const unsigned port);
+        ~NetworkEntity();
+        bool operator==(const NetworkEntity &entity); // TODO
 
-        void start();
-        void stop();
         bool is_alive();
         bool has_data();
         bool is_me();
         BaseMessage get_message(int timeout);  // NOTE: timeout is not supported right now (blocking IO)
 
         friend NetworkEntity& operator<<(NetworkEntity& output_entity, const BaseMessage &message);
+        friend class NetworkServer;
 };
 
 
+// NOTE: to close properly the server, you MUST .stop() and .close() him.
 class NetworkServer
 {
     private:
-        ServerSocket server;
-        std::vector< std::shared_ptr<NetworkEntity> > clients;
-        std::shared_ptr<MessageHandler> p_handler;
+        Socket server;
+        std::vector< std::unique_ptr<NetworkEntity> > clients;
+        MessageHandler handler;
         bool is_alive;
         std::thread accept_thread;
 
         void do_accept();
-        void handle_accept(std::shared_ptr<ServerSocket> &p_client_socket);
+        void handle_accept(Socket &socket);
 
     public:
-        NetworkServer();
-        NetworkServer(NetworkServer &network_server);
-        NetworkServer& operator=(NetworkServer &network_server);
-        NetworkServer(const short port, MessageHandler &handler);
+        NetworkServer(const unsigned short port, MessageHandler &handler);
 
         void start();
         void stop();
+        void close();
+        void close_connection(NetworkEntity &entity);
 
-        std::vector< std::shared_ptr<NetworkEntity> > get_clients();
+        NetworkEntity connect_to(const std::string endpoint_addr, const unsigned short port);
+        std::vector<NetworkEntity> get_clients();
 };
+
 
 #endif
