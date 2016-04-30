@@ -110,7 +110,6 @@ public:
 // NOTE: to close properly the server, you MUST .stop() and .close() him.
 class NetworkServer
 {
-
 private:
     Socket server;
     std::vector< std::unique_ptr<NetworkEntity> > clients;

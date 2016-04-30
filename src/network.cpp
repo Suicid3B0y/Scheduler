@@ -151,6 +151,7 @@ NetworkEntity& operator<<(NetworkEntity &output_entity, const BaseMessage &messa
 
 // ----------------------------------------------------------------------------
 
+
 NetworkServer::NetworkServer(const unsigned short port, MessageHandler &handler)
         : server{}, clients{}, handler{handler}, is_alive{false}
 {
