@@ -53,6 +53,7 @@ void Server::run() {
                             clientSockets[clientSockets.size() - 1].close();
                             deadClient = true;
                             // TODO : gérer une fin plus propre pour la socket
+                            // FIXME: ne rentre pas ici si le client crash, et donc le serveur devient inutilisable
                         }
                     } else {
                         std::string error = "[-] String wasn't well received";
