@@ -27,15 +27,19 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    Socket socketClient;
+    Socket socketClient{"localhost", 3636};
     std::string jobStr;
 
-    socketClient.connect("localhost", 3636);
-
     std::cout << "Enter your job string (--help for format & example) :";
+    // TODO :  envoi de la taille
     std::cin >> jobStr;
 
-    socketClient.send(jobStr);
+    std::string formattedJobStr = jobStr.length() + " ";
+    formattedJobStr += jobStr;
+
+    std::cout << formattedJobStr << std::endl;
+
+    socketClient.send(formattedJobStr);
 
     return 0;
 }

@@ -13,16 +13,22 @@ void Server::run() {
 
         serverSocket.bind_to(port);
         serverSocket.accept(clientSocket);
-
-        clientSocket.set_non_blocking(true);
+        std::cout << "Client accepted." << std::endl;
+        //clientSocket.set_non_blocking(true);
 
         while (isAlive()) {
             std::cout << "Receiving..." << std::endl;
-            clientSocket.recv(jobStr);
-            Job newJob = Reader::parseString(jobStr);
+            //clientSocket.recv(jobStr);
+            std::string test = "1 1 1 /usr/bin/ls";
+
+
+            // TODO : catch des erreurs et tout le bazard
+            //Job newJob = Reader::parseString(jobStr);
+            Job newJob = Reader::parseString(test);
             vector<Job> newJob2 = {newJob};
             scheduler.controller.updateJobQueue(newJob2);
             std::cout << "Jobs updated by socket" << std::endl;
+            // TODO : thread_sleep
         }
 
     } catch (SocketException& e) {
