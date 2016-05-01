@@ -8,14 +8,20 @@
 #include <iostream>
 #include <sstream>
 #include <queue>
+#include <regex>
 #include "job.h"
+#include "JobException.h"
 
 using namespace std;
 
 class Reader {
+private:
+    static bool is_valid(std::string job_literal);
 
 public:
     static std::vector<Job> parseFile(boost::filesystem::path filename);
+
+    static Job parseString(const std::string string);
 
 };
 

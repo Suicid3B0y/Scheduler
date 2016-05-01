@@ -13,7 +13,7 @@ Job::Job(string command_line, unsigned burst_time)
     this->command_line = command_line;
 }
 
-Job::Job(string command_line, unsigned burst_time, int user_priority, int cpu_load)
+Job::Job(string command_line, unsigned burst_time, int user_priority, unsigned cpu_load)
         : timestamp{time(nullptr)},
           startTime{0},
           runningTime{0},
@@ -73,7 +73,7 @@ bool Job::start() {
 
 bool Job::stop() {
     runningTime += time(nullptr) - startTime;
-    debug("Stopping the job " << command_line << " (was running during "
+    debug("[ ] Stopping the job " << command_line << " (was running during "
           << time(nullptr) - startTime << " seconds)" << endl);
     startTime = 0;
 

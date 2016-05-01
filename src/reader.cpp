@@ -2,8 +2,11 @@
 
 std::vector<Job> Reader::parseFile(boost::filesystem::path filename) {
 
+    std::vector<Job> jobs;
+    string line;
     // stream pour le fichier
     ifstream file;
+
     file.open(filename.c_str());
 
     if (!file.is_open()) {
@@ -11,31 +14,43 @@ std::vector<Job> Reader::parseFile(boost::filesystem::path filename) {
         throw "Impossible de charger le fichier";
     }
 
-    std::vector<Job> jobs;
-
-    string line, commande_line;
-    unsigned burst_time;
-    int user_priority, cpu_load;
-
     // Traitement du nuage
     while (getline(file, line)) {
-
-        istringstream in(line);
-        in >> burst_time >> user_priority >> cpu_load;
-        getline(in, commande_line);
-
-        cout << "Command line: " << commande_line << endl;
-        cout << "Burst time: " << burst_time << endl;
-        cout << "User priority: " << user_priority << endl;
-        cout << "CPU load: " << cpu_load << endl;
-
-        jobs.push_back(Job(commande_line, burst_time, user_priority, cpu_load));
-
+        try {
+            Job job = Reader::parseString(line);
+            jobs.push_back(job);
+        } catch (JobException &e) {
+            debug("[-] " << e.description());
+        }
     }
 
     file.close();
 
     return jobs;
 
+}
 
+Job Reader::parseString(const std::string jobStr) {
+
+    if (!is_valid(jobStr)) {
+        throw JobException("Incorrect Job string, please respect our format.");
+    }
+
+    string commande_line;
+    unsigned burst_time, cpu_load;
+    int user_priority;
+
+    istringstream in(jobStr);
+    in >> burst_time >> user_priority >> cpu_load;
+    getline(in, commande_line);
+
+    Job job{commande_line, burst_time, user_priority, cpu_load};
+    return job;
+}
+
+
+
+bool Reader::is_valid(std::string job_literal) {
+    std::regex VALID_JOB_REGEX("^[0-9]+ [0-9]+ [0-9]+ .*$");
+    return std::regex_match(job_literal, VALID_JOB_REGEX);
 }

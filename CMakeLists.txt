@@ -9,7 +9,12 @@ add_executable(scheduler
         src/scheduler.cpp
         src/controller.cpp
         src/reader.cpp
-        src/job.cpp)
+        src/job.cpp
+        src/socket/Socket.cpp
+        src/server/server.cpp)
+add_executable(client
+        src/client/client.cpp
+        src/socket/Socket.cpp)
 add_executable(tests
         src/controller.cpp
         src/tests/tests.cpp
@@ -20,9 +25,11 @@ add_executable(tests
         src/socket/Socket.cpp
         src/job.cpp
         src/network.cpp
+        src/controller.cpp
         src/message_handler.cpp
         )
 target_link_libraries(scheduler ${Boost_LIBRARIES})
+target_link_libraries(client ${Boost_LIBRARIES})
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 
 set(CMAKE_CXX_FLAGS "-Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread")

@@ -10,7 +10,7 @@ Controller::Controller(JobQueue jobQueue, unsigned coreNumber, unsigned timeout)
                                                                                    coreNumber(coreNumber),
                                                                                    timeout(timeout) {
     currentJobs = vector<job_ptr>();
-    debug("Controller instantiation" << endl);
+    debug("[ ] Controller instantiation" << endl);
 }
 
 Controller &Controller::operator=(const Controller &other) {

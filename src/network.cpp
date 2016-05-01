@@ -17,14 +17,14 @@
 #include "network.h"
 
 NetworkEntity::NetworkEntity() :
-    socket{}, handler{},
-    endpoint_addr{MY_HOST}, port{},
-    local_buffer{}, is_started{false}
+        socket{}, handler{},
+        endpoint_addr{MY_HOST}, port{},
+        local_buffer{}, is_started{false}
 {
 }
 
 NetworkEntity::NetworkEntity(const NetworkEntity &entity) :
-    NetworkEntity(entity.socket, entity.handler, entity.endpoint_addr, entity.port)
+        NetworkEntity(entity.socket, entity.handler, entity.endpoint_addr, entity.port)
 {
 }
 
@@ -47,7 +47,7 @@ NetworkEntity& NetworkEntity::operator=(const NetworkEntity &entity)
 }
 
 NetworkEntity::NetworkEntity(const Socket &socket, const MessageHandler &handler, const std::string endpoint_addr, const unsigned port)
-    : NetworkEntity()
+        : NetworkEntity()
 {
     this->socket = socket;
     this->handler = handler;
@@ -151,9 +151,8 @@ NetworkEntity& operator<<(NetworkEntity &output_entity, const BaseMessage &messa
 
 // ----------------------------------------------------------------------------
 
-
 NetworkServer::NetworkServer(const unsigned short port, MessageHandler &handler)
-    : server{}, clients{}, handler{handler}, is_alive{false}
+        : server{}, clients{}, handler{handler}, is_alive{false}
 {
     server.bind_to(port);
 }

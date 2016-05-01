@@ -22,8 +22,7 @@ public:
 
     Controller(const Controller &other);
 
-    Controller(JobQueue jobQueue, unsigned coreNumber,  unsigned timeout);
-
+    Controller(JobQueue jobQueue, unsigned coreNumber, unsigned timeout);
     Controller &operator=(const Controller &other);
 
     vector<job_ptr> updateRunningJobs();

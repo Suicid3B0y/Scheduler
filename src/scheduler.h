@@ -4,17 +4,18 @@
 #include "controller.h"
 #include <chrono>
 #include <thread>
-
-using namespace std;
-
 class Scheduler {
 
 private:
     unsigned timeSlice;
 
     bool alive;
+    bool is_started;
+
+    int run();
 
 public:
+    std::thread listening_thread;
     Controller controller;
     Scheduler();
 
@@ -23,10 +24,9 @@ public:
     Scheduler(unsigned core_number, unsigned timeout, unsigned timeSlice);
 
     Scheduler &operator=(const Scheduler &other);
-
     bool isAlive();
 
-    int run();
+    void start();
 };
 
 #endif
