@@ -10,17 +10,25 @@
 #include "../reader.h"
 #include "../socket/Socket.h"
 
+
 class Server {
 private:
     bool is_started;
     bool alive;
+
     void run();
+
     Scheduler &scheduler;
 
     bool isAlive();
+
+    bool parseSocketString(const std::string &line, std::string &result);
+
 public:
     Server(Scheduler &scheduler);
+
     std::thread listening_thread;
+
     void start();
 };
 

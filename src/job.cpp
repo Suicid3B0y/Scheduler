@@ -73,7 +73,7 @@ bool Job::start() {
 
 bool Job::stop() {
     runningTime += time(nullptr) - startTime;
-    debug("Stopping the job " << command_line << " (was running during "
+    debug("[ ] Stopping the job " << command_line << " (was running during "
           << time(nullptr) - startTime << " seconds)" << endl);
     startTime = 0;
 

@@ -29,17 +29,28 @@ int main(int argc, char **argv) {
 
     Socket socketClient{"localhost", 3636};
     std::string jobStr;
+    std::string formattedJobStr;
+    std::string response;
+    bool isAlive = true;
 
-    std::cout << "Enter your job string (--help for format & example) :";
-    // TODO :  envoi de la taille
-    std::cin >> jobStr;
+    while (isAlive) {
+        std::cout << "Enter your job string (--help for format & example) (q for quit):";
+        getline(cin, jobStr);
 
-    std::string formattedJobStr = jobStr.length() + " ";
-    formattedJobStr += jobStr;
+        if (jobStr == "q") {
+            isAlive = false;
+            socketClient.send("END TRANSMISSION\n");
+            socketClient.close();
+        } else {
+            formattedJobStr = jobStr;
+            formattedJobStr += '\n';
 
-    std::cout << formattedJobStr << std::endl;
-
-    socketClient.send(formattedJobStr);
+            socketClient.send(formattedJobStr);
+            std::cout << "You sent : " << jobStr << std::endl;
+            socketClient.recv(response);
+            std::cout << "Server responded : " << response << std::endl;
+        }
+    }
 
     return 0;
 }
