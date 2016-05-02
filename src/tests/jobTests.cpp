@@ -7,16 +7,16 @@ using namespace std;
 void testShortJobInstantiation() {
     Job j("ls", 100);
 
-    ASSERT(j.command_line == "ls");
-    ASSERT(j.burst_time == 100);
+    ASSERT(j.getCommandLine() == "ls");
+    ASSERT(j.getBurstTime() == 100);
 }
 
 
 void testLongJobInstantiation() {
     Job j("ls", 200, 1, 10);
 
-    ASSERT(j.user_priority == 1);
-    ASSERT(j.cpu_load == 10);
+    ASSERT(j.getUserPriority() == 1);
+    ASSERT(j.getCPULoad() == 10);
 }
 
 
@@ -30,11 +30,11 @@ void testJobPriorityQueue() {
     queue.push(p_j2);
     queue.push(p_j3);
 
-    ASSERT(queue.top().get()->command_line == p_j2.get()->command_line);
+    ASSERT(queue.top().get()->getCommandLine() == p_j2.get()->getCommandLine());
     queue.pop();
-    ASSERT(queue.top().get()->command_line == p_j3.get()->command_line);
+    ASSERT(queue.top().get()->getCommandLine() == p_j3.get()->getCommandLine());
     queue.pop();
-    ASSERT(queue.top().get()->command_line == p_j1.get()->command_line);
+    ASSERT(queue.top().get()->getCommandLine() == p_j1.get()->getCommandLine());
 }
 
 

@@ -49,6 +49,36 @@ int Job::getPid() const {
     return jobPid;
 }
 
+string Job::getCommandLine() const
+{
+    return command_line;
+}
+
+int Job::getBurstTime() const
+{
+    return burst_time;
+}
+
+int Job::getUserPriority() const
+{
+    return user_priority;
+}
+
+int Job::getCPULoad() const
+{
+    return cpu_load;
+}
+
+time_t Job::getStartTime() const
+{
+    return startTime;
+}
+
+time_t Job::getRunningTime() const
+{
+    return runningTime;
+}
+
 bool Job::start() {
     startTime = time(nullptr);
     if (runningTime == 0) {

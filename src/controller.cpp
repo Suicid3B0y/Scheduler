@@ -59,11 +59,11 @@ void Controller::updateJobQueue(vector<Job>& newJobs) {
     // TODO : verify this function
 
     for (Job &job: newJobs) {
-        debug("[-] " << job.command_line << endl);
+        debug("[-] " << job.getCommandLine() << endl);
         jobQueue.push(std::make_shared<Job>(Job(job)));
-        debug("[-] 2 " << job.command_line << endl);
+        debug("[-] 2 " << job.getCommandLine() << endl);
     }
 
-    debug("[-] JobQueue top " << jobQueue.top()->command_line << endl);
+    debug("[-] JobQueue top " << jobQueue.top()->getCommandLine() << endl);
     debug("[-] JobQueue size " << jobQueue.size() << endl);
 }
