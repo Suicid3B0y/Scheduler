@@ -237,8 +237,58 @@ Here is an example of file :
 
 \subsection{Controller}\label{job_controller}
 
-\todo{détailler la façon que l'on a de stop et start un job}
-\todo{détailler la façon que l'on a de pin sur un proc (affinity)}
+\subsubsection{Job queue management}
+
+The Job queue is reorder at each scheduler time slice. Its reordering follows our scheduling method keeping in mind that
+the priority is more important than the core management. 
+
+For example, we have a job with a priority of 10 and uses 75\% of the CPU. We have also two other jobs with 50\% CPU load and
+a priority of 9. In this case, the core won't be optimized and the first job will always be the most important to run.
+
+\subsubsection{Start/stop job}
+
+\paragraph{Starting a job}
+To start a job, we fork our program. In the child, we execute the job command line and when the job is done we exit the child.
+In the father,  we record the child pid to keep the possibility to stop it, resume it, etc.
+
+\paragraph{Stopping a job}
+To stop a job, we send a SIGSTOP signal to the child pid.
+
+\subsubsection{Core management}
+
+We chose to pin our processes until the core is full then skip to the next core. We could have chosen a method that
+equally distribute the charge between the cores.
+We will justify our choice with the following example.\\
+
+Let's take this case, we have 4 processes which each take 25\% of the CPU and we need to pin a
+100\% CPU process. Let's say we have 4 cores. We will now compare the two methods:\\
+
+Equally distributed method inital state:
+\begin{itemize}
+\item CPU 0 : 25\%
+\item CPU 1 : 25\%
+\item CPU 2 : 25\%
+\item CPU 3 : 25\%
+\end{itemize}
+
+\textbf{We can't pin the 100\% process !} We need to wait until one job has finished with this method.\\
+
+Our chosen method initial state:
+\begin{itemize}
+\item CPU 0 : 100\% (25\% * 4)
+\item CPU 1 : 0\%
+\item CPU 2 : 0\%
+\item CPU 3 : 0\%
+\end{itemize}
+
+We can now pin our process to the second CPU and arrive in the following state:
+\begin{itemize}
+\item CPU 0 : 100\% (25\% * 4)
+\item CPU 1 : 100\%
+\item CPU 2 : 0\%
+\item CPU 3 : 0\%
+\end{itemize}
+
 
 \subsection{Dynamic feed of the Job Queue using \texttt{schedclt}}\label{schedclt_implementation}
 
@@ -344,10 +394,7 @@ drwxrwxr-x 8 archangel archangel    4096 mai    2 13:57 CMakeFiles
 \end{verbatim}
 
 \paragraph{Multiple client handling}
-
-Our server/scheduler is capable of handling multiple client connections. However, it cannot receive jobs from multiple client at the same time. Each new connected client needs to wait for the current connected client to finish his transaction (by sending \texttt{q} to the server).
-
-Despite the fact that our server cannot receive multiple job strings at a time, a connected client can send his job anyway and it will be processed once it is his turn to send a job string.
+Our server/scheduler is capable of handling multiple client connections. You just have to launch multiple schedclt program.
 
 \clearpage
 
