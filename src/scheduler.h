@@ -51,6 +51,11 @@ class Scheduler {
         bool isAlive();
 
         /**
+         * \brief Update the job queue with a new set of jobs
+         */
+        void updateJobQueue(vector<Job>& newJobs);
+
+        /**
          * \brief Starts the scheduler.
          */
         void start();
