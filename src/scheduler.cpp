@@ -1,6 +1,8 @@
 #include "scheduler.h"
 
-Scheduler::Scheduler() : timeSlice(100), controller(Controller{}), alive{true}, is_started{false} { }
+Scheduler::Scheduler() : timeSlice(100), alive {true}, is_started{false}, controller(Controller{})
+{
+}
 
 Scheduler::Scheduler(const Scheduler &other) : Scheduler() {
     (*this) = other;
