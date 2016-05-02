@@ -70,65 +70,171 @@ class NetworkEntity;
 class NetworkServer;
 
 
+/**
+ * \class NetworkEntity
+ * \brief Represent an entity (remote or local) connected through a socket.
+ */
 class NetworkEntity
 {
     private:
-        Socket socket;
-        MessageHandler handler;
-        std::string endpoint_addr;
-        unsigned port;
+        Socket socket;  /*!< Socket handling the connection. */
+        MessageHandler handler;  /*!< Message handler used if a message is received from the remote endpoint. */
+        std::string endpoint_addr;  /*!< Remote (or local) endpoint address. */
+        unsigned port;  /*!< Remote (or local) endpoint port. */
 
-        std::string local_buffer;  // Should not harm chickens...
-        bool is_started;
-        std::thread listening_thread;
+        std::string local_buffer;  /*!< Local buffer containing the not treated data */
+        bool is_started;  /*!< Boolean checking wether the listening thread is started or not. */
+        std::thread listening_thread;  /*!< Thread listening for new messages */
 
-        unsigned get_message_length(int timemout);  // NOTE: timeout is not supported right now (blocking IO)
+        /**
+         * \brief Shortcut for getting the length of the message send by the remote endpoint.
+         */
+        unsigned get_message_length(int timemout);
+
+        /**
+         * \brief Target method for the listening thread, awaiting for new message and handling them.
+         */
         void wait_new_messages();
 
     protected:
+        /**
+         * \brief Start the listening thread.
+         */
         void start();
-        void close();  // NetworkEntity should be destructed after using this function.
+
+        /**
+         * \brief Stop the listening thread (and join it), and close the socket.
+         */
+        void close();
 
     public:
+        /**
+         * \brief Constructor.
+         */
         NetworkEntity();
+
+        /**
+         * \brief Copy constructor.
+         */
         NetworkEntity(const NetworkEntity &entity);
+
+        /**
+         * \brief Assignment operator.
+         */
         NetworkEntity& operator=(const NetworkEntity &entity);
+
+        /**
+         * \brief Full constructor.
+         */
         NetworkEntity(const Socket &socket, const MessageHandler &handler, const std::string endpoint_addr, const unsigned port);
+
+        /**
+         * \brief Destructor.
+         */
         ~NetworkEntity();
+
+        /**
+         * \brief Comparison operator.
+         */
         bool operator==(const NetworkEntity &entity); // TODO
 
+        /**
+         * \brief Check if the remote endpoint is alive.
+         */
         bool is_alive();
+
+        /**
+         * \brief Check if the remote endpoint has send data over the socket.
+         */
         bool has_data();
+
+        /**
+         * \brief Check wether the entity is local or remote.
+         */
         bool is_me();
+
+        /**
+         * \brief Get a message.
+         *
+         * NOTE: timeout is not supported right now (blocking IO)
+         */
         BaseMessage get_message(int timeout);  // NOTE: timeout is not supported right now (blocking IO)
 
+        /**
+         * \brief Operator used to send a message to the remote endpoint.
+         */
         friend NetworkEntity& operator<<(NetworkEntity& output_entity, const BaseMessage &message);
+
+        /**
+         * \brief Friend class used to manage start / stop listening thread.
+         */
         friend class NetworkServer;
 };
 
 
-// NOTE: to close properly the server, you MUST .stop() and .close() him.
+/**
+ * \class NetworkServer
+ * \brief Instantiate a server that listen for new connections.
+ *
+ * NOTE: to close properly the server, you MUST .stop() and .close() him.
+ */
 class NetworkServer
 {
     private:
-        Socket server;
-        std::vector< std::unique_ptr<NetworkEntity> > clients;
-        MessageHandler handler;
-        bool is_alive;
-        std::thread accept_thread;
+        Socket server;  /*!< Server socket listening for new connections */
+        std::vector< std::unique_ptr<NetworkEntity> > clients;  /*!< Vector containing all currently connected clients */
+        MessageHandler handler;  /*!< Message handler used once a new message is received, passed to all sub NetworkEntity */
+        bool is_alive;  /*!< Boolean indicating wether the thread is started or not */
+        std::thread accept_thread;  /*!< Thread accepting new connections */
 
+        /**
+         * \brief Target method of the accepting thread.
+         *
+         * Accept a connection, create the socket and pass it to the handle_accept method.
+         */
         void do_accept();
+
+        /**
+         * \brief Method call once a new client is connected.
+         *
+         * Create the NetworkEntity based on this socket, and starts its listening thread.
+         */
         void handle_accept(Socket &socket);
 
     public:
+        /**
+         * \brief Constructor.
+         */
         NetworkServer(const unsigned short port, MessageHandler &handler);
 
+        /**
+         * \brief Start the thread listening for new connections.
+         */
         void start();
+
+        /**
+         * \brief Stop the thread listening for new connections.
+         */
         void stop();
+
+        /**
+         * \brief Close the server socket and all clients sockets.
+         */
         void close();
+
+        /**
+         * \brief Close a specific connection and remove it from the list of the connected clients.
+         */
         void close_connection(NetworkEntity &entity);
 
+        /**
+         * \brief Connect to a remote client.
+         */
         NetworkEntity connect_to(const std::string endpoint_addr, const unsigned short port);
+
+        /**
+         * \brief Get the list of all currently connected clients.
+         */
         std::vector<NetworkEntity> get_clients();
 };
 
