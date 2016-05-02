@@ -19,15 +19,25 @@ using namespace std;
  * \brief Class used to parse a file.
  */
 class Reader {
-private:
-    static bool is_valid(std::string job_literal);
+
+    private:
+
+        /**
+         * \brief Check if the job string is valid.
+         */
+        static bool is_valid(std::string job_literal);
 
     public:
 
-        // FIXME: static should not be used in C++
+        /**
+         * \brief Returns a list of job from a file.
+         */
         static std::vector<Job> parseFile(boost::filesystem::path filename);
 
-    static Job parseString(const std::string string);
+        /**
+         * \brief Parse a string representing a job, and instantiate a job from it.
+         */
+        static Job parseString(const std::string string);
 
 };
 
