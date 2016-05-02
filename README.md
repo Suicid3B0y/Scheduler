@@ -1,7 +1,31 @@
-# Scheduler
+# Scheduler C++
 *C++ Scheduler with Fixed-Priority Pre-emptive Scheduling*
 
-### Repository workflow
+## Compilation
+
+To compile our project, please follow this indications :
+
+    $ mkdir build && cd build
+    $ cmake ..
+    $ make
+
+From here, you will have two important executables : _scheduler_, _shedclt_.
+
+## Using our program
+
+To launch our scheduler which is also the server, please issue the following command while being in _build_ folder :
+
+    $ ./scheduler -i path/to/your_file -s 2000 -c 4
+
+Here we launch our scheduler with a TimeSlice of 2000ms, 4 cores and we initialized our Job Queue with jobs contained in _your_file_.
+
+To launch our client, you need to have our scheduler runnning and issue the following command while being in _build_ folder:
+
+    $ ./client
+
+_Note : our server/scheduler is capable of handling multiple client connections. However, it cannot receive jobs from multiple client at the same time. Each new connected client needs to wait for the current connected client to finish his transaction (by sending **q** to the server)._
+
+## Repository workflow
 #### Hint 
 `$ (dev) git command` means that you should run `git command` on branch `dev`. `$ git blabla` means that you can run `git command` where you want.
 

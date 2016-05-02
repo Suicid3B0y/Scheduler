@@ -22,13 +22,13 @@ int main(int argc, char **argv) {
             ("input-file,i", po::value<fs::path>(&input_filepath), "input filepath containing jobs");
 
     po::options_description queue("Queue options");
-    config.add_options()
+    queue.add_options()
             ("time-slice,s", po::value<unsigned>(&time_slice)->default_value(100),
              "time elapsed between too priority check in milliseconds")
             ("core-number,c", po::value<unsigned>(&core_number)->default_value(1),
              "number of cores used by the scheduler")
             ("timeout,t", po::value<unsigned>(&timeout)->default_value(0),
-             "maximum execution time in milliseconds of a job, if set to 0, scheduler will be non-preemptive");
+             "maximum execution time in milliseconds of a job, if set to 0, no timeout will be used");
 
     po::options_description cmdline_options;
     cmdline_options.add(generic).add(config).add(queue);

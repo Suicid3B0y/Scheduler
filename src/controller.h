@@ -55,6 +55,13 @@ public:
     vector<job_ptr> updateRunningJobs();
 
     /**
+     * \brief Get the Core to run on for a Job
+     *
+     * Return the number of the Core
+     */
+    int getAffinity(unsigned coreLoad[], unsigned jobCpuLoad);
+
+    /**
      * \brief Update the jobs queue
      *
      * Update the job queue by adding new jobs to the current jobQueue. An updateRunningJobs should be call after.
