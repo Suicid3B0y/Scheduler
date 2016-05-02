@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
     server.start();
 
     scheduler.listening_thread.join();
-    server.join();
+    server.stop();
 
     return 0;
 }
