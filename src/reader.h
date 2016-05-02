@@ -14,12 +14,18 @@
 
 using namespace std;
 
+/**
+ * \class Reader
+ * \brief Class used to parse a file.
+ */
 class Reader {
 private:
     static bool is_valid(std::string job_literal);
 
-public:
-    static std::vector<Job> parseFile(boost::filesystem::path filename);
+    public:
+
+        // FIXME: static should not be used in C++
+        static std::vector<Job> parseFile(boost::filesystem::path filename);
 
     static Job parseString(const std::string string);
 
