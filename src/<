@@ -32,7 +32,7 @@ private:
     string command_line; /*!< Job's command line (i.e. what does the job) */
     unsigned burst_time; /*!< Job's burst time ; user defined parameter */
     int user_priority; /*!< Job's priority defined by the user */
-    unsigned cpu_load; /*!< Job's CPU load */
+    int cpu_load; /*!< Job's CPU load */
 
 public:
 
@@ -49,7 +49,7 @@ public:
     /**
      * \brief Job long instantiation, if the user specify a specific user priority and cpu load.
      */
-    Job(string command_line, unsigned burst_time, int user_priority, unsigned cpu_load);
+    Job(string command_line, unsigned burst_time, int user_priority, int cpu_load);
 
     /**
      * \brief Assignement operator
@@ -137,10 +137,6 @@ typedef shared_ptr<Job> job_ptr;
  * NOTE: a job CANNOT be equal to another. Then j1 > j2 == !(j1 < j2)
  */
 struct JobPtrOrder {
-
-    /**
-     * \brief Operator used to sort two jobs.
-     */
     bool operator()(job_ptr const &left, job_ptr const &right) const;
 };
 
