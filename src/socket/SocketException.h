@@ -5,19 +5,28 @@
 
 #include <string>
 
+/**
+ * \class SocketException
+ * \brief Exception raised when an anormal issue happen while using the Socket class.
+ */
 class SocketException
 {
-   public:
-    SocketException(std::string s) : m_s(s){};
-    ~SocketException(){};
+    public:
+        /**
+         * \brief Constructor.
+         */
+        SocketException(std::string s) : m_s(s){};
 
-    std::string description()
-    {
-        return m_s;
-    }
+        /**
+         * \brief Getter for the description of the exception.
+         */
+        std::string description()
+        {
+            return m_s;
+        }
 
-   private:
-    std::string m_s;
+    private:
+        std::string m_s;  /*!< Contains the description of the exception. */
 };
 
 #endif
