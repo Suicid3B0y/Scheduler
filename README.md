@@ -25,7 +25,7 @@ To launch our client, you need to have our scheduler runnning and issue the foll
 
     $ ./client
 
-_Note : our server/scheduler is capable of handling multiple client connections.
+_Note : our server/scheduler is capable of handling multiple client connections._
 
 ## Repository workflow
 #### Hint 
