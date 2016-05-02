@@ -54,7 +54,6 @@ void ClientHandler::handle_reception()
             } catch (JobException &e) {
                 debug("[-] " << e.description() << std::endl);
                 socket.send(e.description());
-                is_alive = false;
             }
         } else {
             socket.close();
