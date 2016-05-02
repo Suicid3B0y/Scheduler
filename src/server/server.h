@@ -12,6 +12,10 @@
 #include "../socket/Socket.h"
 
 
+/**
+ * \class ClientHandler
+ * \brief Handle a client and manage its requests
+ */
 class ClientHandler {
     private:
         bool is_alive;
@@ -28,9 +32,19 @@ class ClientHandler {
         bool parseSocketString(const std::string &line, std::string &result);
 
     public:
+        /**
+         * \brief Constructor.
+         */
         ClientHandler(const Socket socket, Scheduler &scheduler);
 
+        /**
+         * \brief Starts listening requests from client.
+         */
         void start();
+
+        /**
+         * \brief Stops listening requests from client.
+         */
         void stop();
 };
 
