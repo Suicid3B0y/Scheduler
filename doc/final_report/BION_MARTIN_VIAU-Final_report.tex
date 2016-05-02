@@ -1,0 +1,367 @@
+\documentclass[a4paper,11pt]{article}
+
+% --- Packages generaux --------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage{textcomp}
+\usepackage{lscape}
+\usepackage{ucs}
+\usepackage[T1]{fontenc}
+%\usepackage{eurosym}
+%\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage[english]{babel}
+%\graphicspath{{photos/}{schemas/}}
+\usepackage[hidelinks]{hyperref}
+\usepackage{pdfpages}
+\usepackage{capt-of}
+
+% --- Package specifiques ------------------------------------------------------
+
+%\usepackage{amsmath,amssymb} % pour la gestion facile des trucs orientes maths
+\usepackage{listingsutf8} % pour introduire du code source
+%\lstloadlanguages{Java}
+\usepackage{verbatim}
+\usepackage{url}
+\usepackage{multicol} % pour les environnement a plusieurs colonnes
+\usepackage{vmargin} % pour regler finement les marges (ne pas combiner avec fullpage)
+\usepackage{fancyhdr} % pour des en-tetes plus pousses
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+% --- Mise en forme ------------------------------------------------------------
+
+\setlength{\parindent}{7mm}
+\setmarginsrb{25mm}{20mm}{25mm}{20mm}{14pt}{5mm}{0pt}{7mm}
+% marges gauche, haut, droite, bas
+% hauteur de l'entête
+% distance entre l'entête et le texte
+% hauteur du pied de page
+% distance entre le texte et le pied de page
+
+\pagestyle{fancy}
+\fancyhead[L]{GSI Project - Final report - 2016}
+\fancyhead[R]{\leftmark}
+
+\lstset{
+         basicstyle=\footnotesize\ttfamily, % Standardschrift
+         numbers=left,               % Ort der Zeilennummern
+         numberstyle=\tiny,          % Stil der Zeilennummern
+         %stepnumber=2,               % Abstand zwischen den Zeilennummern
+         numbersep=5pt,              % Abstand der Nummern zum Text
+         tabsize=2,                  % Groesse von Tabs
+         extendedchars=true,         %
+         breaklines=true,            % Zeilen werden Umgebrochen
+         keywordstyle=\color{red},
+    		frame=b,
+         %keywordstyle=[1]\textbf{},    % Stil der Keywords
+         %keywordstyle=[2]\textbf{},    %
+         %keywordstyle=[3]\textbf{},    %
+        %keywordstyle=[4]\textbf{},  % \sqrt{\sqrt{}} %
+         stringstyle=\color{white}\ttfamily, % Farbe der String
+         showspaces=false,           % Leerzeichen anzeigen ?
+         showtabs=false,             % Tabs anzeigen ?
+         xleftmargin=17pt,
+         framexleftmargin=17pt,
+         framexrightmargin=5pt,
+         framexbottommargin=4pt,
+         %backgroundcolor=\color{lightgray},
+         showstringspaces=false      % Leerzeichen in Strings anzeigen ?
+ }
+
+% --- Macros generales ---------------------------------------------------------
+
+% macros pour la page de titre
+\newcommand*{\HRule}{\rule{\linewidth}{0.4mm}}  % trait horizontal epais
+\newcommand*{\auteur}[2]{\large #1~\textsc{#2}} % mise en forme du nom d'auteur
+
+% tableaux
+\newcommand*{\alignloc}[2]{\multicolumn{1}{|#1|}{#2}} % change l'alignement
+
+% macros pour gerer les choses a faire lors de l'ecriture du tex
+\newcommand*{\tocheck}{\textcolor{red}{\bf \emph{A VERIFIER}}}
+\newcommand*{\checked}{\textcolor{green}{\bf \emph{(vérifié)}}}
+\newcommand*{\todo}[1]{\textcolor{blue}{[A FAIRE : \emph{#1}]}}
+
+% --- Mots mal coupes ----------------------------------------------------------
+
+\hyphenation{} % separer les syllabes par des tirets
+
+% --- Elements de la page de titre ---------------------------------------------
+
+\newcommand{\pretitre}{École Internationale des Sciences du Traitement de l'Information (EISTI)}
+\newcommand{\grostitre}{GSI Project -- Final report}
+\newcommand{\auteurs}{Authors : \auteur{Titouan}{Bion}, \auteur{Axel}{Martin} et \auteur{Thomas}{Viau} \\ Second year engineering students at the EISTI (Pau).}
+\newcommand{\correcteurs}{Addressed to M. \auteur{Juan}{Angel Lorenzo del Castillo}}
+\newcommand{\madate}{\today} % \today pour mettre la date a la compilation
+
+% ==============================================================================
+\begin{document}
+% ==============================================================================
+
+% --- Page de titre personnalisee ----------------------------------------------
+
+\begin{titlepage}
+\begin{figure}[h]
+\includegraphics[scale=1]{images/Logo_EISTI.png}
+\hfill
+\end{figure}
+  \begin{center}
+    ~
+    \vfill
+    {\large\pretitre\\}           % pre-titre
+    \vspace{2cm}
+    \HRule \\[0.4cm]
+    {\Huge\bf\grostitre\\[0.4cm]} % gros titre
+    \HRule \\[0.4cm]
+    \vspace{2cm}
+    \auteurs\\                    % auteur(s)
+    \medskip
+    \vfill
+   	\correcteurs
+    \vfill
+    {\large\madate}               % date
+  \end{center}
+\end{titlepage}
+
+% --- Table des matieres -------------------------------------------------------
+
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+As part of our Parallel Programming and Network courses, we were asked to develop a job scheduler. This document is the final report of this project.\\
+A scheduler is used to assign a job --- processes, threads, etc. --- to machine hardware resources such as processors. Every Operating System works with its own scheduler in order to give the user the impression of fluidity even if tons of process are working \textit{"at the same time"}\cite{wiki:scheduler}.\\
+
+First, we will offer you a fast overview of the scheduler and job parameters to introduce you to our scheduling strategy. Then we will elaborate this scheduling strategy. After that we will develop the implemented features and state problems we encountered. Finally we will explain how to use our program.
+
+\newpage
+
+\section{Job and Scheduler Queue parameters}
+
+\subsection{Job parameters}\label{job_parameters}
+
+A job will eventually have different \textbf{compulsory} properties provided by the user:
+
+\begin{itemize}
+\item Burst time: an unsigned integer representing the time in milliseconds the job will use for the CPU to compute the job
+\item Priority: an integer representing the user fixed priority, lowest priority to the lowest integer
+\item CPU load : an unsigned integer representing percentage of used CPU by the program (from 1 to 100)
+\item Command line : the program command line along with as much parameters as needed
+\end{itemize}
+
+\subsection{Scheduler parameters}
+
+Despite the fact that our program could work perfectly with default values and use the best for the system, the Job Queue itself can have optional properties. These properties will be provided by the user:
+\begin{itemize}
+\item \texttt{Timeout}: the time after which the application will kill the job, if set to 0 there would be no timeout and no job would be killed
+\item \texttt{Number of cores}: the number of processors the scheduler can send jobs to, by default it will be set to 1.
+\item \texttt{Time Slice}: an unsigned integer representing the time in milliseconds between each priority check \footnote{See our Scheduling Strategy Time Slice section for more information: \ref{scheduling_time_slice}}.
+\end{itemize}
+
+\clearpage
+
+\section{Our Scheduling strategy}\label{scheduling_strategy_details}
+
+\subsection{Scheduling method description}
+
+There are many methods and as many algorithms to achieve scheduling. We chose the method that prioritize the shortest burst time programs to make the Operating System more dynamic and provide the best user experience.
+This method is used by the majority of Operating Systems, as Windows and UNIX systems (Mac, Linux distributions).
+
+\subsubsection{Overall description}
+
+This method named \textbf{Fixed-priority pre-emptive scheduling} will always execute the job with the highest priority to ensure that the user can have what he wants first. A job not being prioritized by the user will have a \textit{default priority}.
+In the case where there are no prioritized jobs and several default priority jobs, the first job that will be executed is the one with the shortest \textit{burst time} --- the time the job will use for the CPU to compute the job --- to ensure the velocity of the method.
+We will also implement the concept of \textit{aging} priority too. A process will not wait forever in an infinite loop. Indeed, the time elapsed since the job's declaration will raise its priority. For instance, a job with default priority, a burst time of 600ms which was declared for 10s, will be run \textbf{before} a job with default priority, a burst time of 550ms which was declared for 4s.
+
+\subsubsection{Time slice}\label{scheduling_time_slice}
+
+The \textit{time slice} concept is used in this method too. It means that a job will not hog the processor for a time longer than a time slice. A job can be suspended if a job with higher priority comes in and will be resumed after the termination of the latter. Actually, this \textit{priority race} is checked each time slice.
+
+\subsection{Example of scheduling with our strategy}
+
+The following chart (Figure \ref{scheduling_example}) shows how processes are assigned to cores of a processor. Here we have a duo-core processor with four processes:
+
+\begin{itemize}
+\item A $\rightarrow$ Burst time: 300ms ; declared for 3s ; priority: high
+\item B $\rightarrow$ Burst time: 100ms ; declared for 2s ; priority: high
+\item C $\rightarrow$ Burst time: 200ms ; declared for 2s ; priority: normal
+\item D $\rightarrow$ Burst time: 100ms ; declared for 2s ; priority: normal
+\end{itemize}
+
+\begin{center}
+\begin{figure}[ht]
+\includegraphics[width=1\linewidth]{images/scheduler_example.png}
+\caption{Example of scheduling following our strategy.}
+\label{scheduling_example}
+\end{figure}
+\end{center}
+
+\clearpage
+
+\section{Implemented features}
+
+\subsection{Sequential scheduler}
+
+We implemented a sequential scheduler that uses the scheduling method explain in \ref{scheduling_strategy_details}. He owns a controller in charge of starting or stopping job in its Job Queue (see \ref{job_controller}). At each Time Slice, the scheduler will command its controller to reorder its Job Queue according to our scheduling method.
+
+\paragraph{File input format}\label{file_format}
+
+A file containing jobs can be specified to the scheduler, its controller will use it to fill its Job Queue. This file should respect the following format :
+
+\begin{verbatim}
+    burst_time user_priority cpu_load command_line
+\end{verbatim}
+
+with these types :
+
+\begin{verbatim}
+    (unsigned) (int)         (int)    (std::string)
+\end{verbatim}
+
+Here is an example of file :
+
+\begin{verbatim}
+    120 5 10 sleep 3
+    120 5 100 program_toto -l -s 12
+    220 5 40 /bin/ls -la
+    120 5 20 sleep 12
+\end{verbatim}
+
+\subsection{Controller}\label{job_controller}
+
+\todo{détailler la façon que l'on a de stop et start un job}
+\todo{détailler la façon que l'on a de pin sur un proc (affinity)}
+
+\subsection{Dynamic feed of the Job Queue using \texttt{schedclt}}\label{schedclt_implementation}
+
+A tool \texttt{schedclt} --- for scheduler client --- has been developed in order to interact with the scheduler. This tool is launched without parameters and shows a prompt waiting for a Job string. After the user inputs its Job string, it will send it through a socket to the scheduler server. The latter will then announced to its Controller that it needs to inject the job and reload its job queue. You can see an illustrated version of this routine on Figure \ref{schedclt_implementation_png}.
+
+\begin{center}
+\begin{figure}[ht]
+\includegraphics[width=1\linewidth]{images/use_case_with_controller.png}
+\caption{Scheduler client workflow chart.}
+\label{schedclt_implementation_png}
+\end{figure}
+\end{center}
+
+\clearpage
+
+\section{Faced difficulties}
+
+\subsection{OpenMP and MPI optimizations}
+
+We didn't have enough time to implement a parallel and distributed version of our scheduler. Reinforced by the lateness of course, especially on MPI, we didn't have enough time to think our architecture to implement a correct distributed version.
+
+\subsection{Language difficulties}
+
+As we were still having C++ courses during the development of this project, we made a large amount of bad architectural choices. We often wasted our time doing huge compulsory refactorings of our application.
+
+
+\clearpage
+
+\section{How to use our program ?}
+
+\subsection{Programs description}
+
+Our scheduler program is both responsible of scheduling and listen to a port as a server. This server can receive jobs from clients in order to feed the job queue as explain in \ref{schedclt_implementation}.\\
+
+Our scheduler program has the following parameters :
+
+\begin{verbatim}
+    $ ./scheduler -h
+
+Generic options:
+  -h [ --help ]                   produce help message
+
+File options:
+  -i [ --input-file ] arg         input filepath containing jobs
+
+Queue options:
+  -s [ --time-slice ] arg (=100)  time elapsed between too priority check in
+                                  milliseconds
+  -c [ --core-number ] arg (=1)   number of cores used by the scheduler
+  -t [ --timeout ] arg (=0)       maximum execution time in milliseconds of a
+                                  job, if set to 0, no timeout will be
+                                  used
+
+\end{verbatim}
+
+The specified file should be formatted as it is explain in \ref{file_format}.
+
+\subsection{Sending Jobs with \texttt{schedclt}}
+
+To send jobs to our scheduler, we need to launch the scheduler program :
+
+\begin{verbatim}
+    $ ./scheduler -s 2000 -c 4 -i ../dataset/jobs
+\end{verbatim}
+
+In this example, we launch our scheduler with a 2000ms TimeSlice, 4 cores and Job Queue initialized with jobs contained in \texttt{../dataset/jobs} file.\\
+
+Then, in a different terminal, we need to launch a client :
+
+\begin{verbatim}
+    $ ./client
+    Enter your job string (--help for format & example) (q for quit):
+\end{verbatim}
+
+We can see that \texttt{client} is waiting for us to specify a job string which should respect our format (see \ref{file_format}). We will give him the following job string : \texttt{20 1 3 /bin/ls -l}. The client terminal now displays the following content :
+
+\begin{verbatim}
+Enter your job string (--help for format & example) (q for quit):20 1 3 /bin/ls -l
+You sent : 20 1 3 /bin/ls -l
+Server responded : [+] Job added to queue
+Enter your job string (--help for format & example) (q for quit):
+\end{verbatim}
+
+We can see that the server responded that our job has been added to the Job queue. Everything is fine ! The client now wait for a new input.\\
+
+Meanwhile, on our server/scheduler terminal we can see that our job is being processed :
+
+\begin{verbatim}
+[ ] Jobs updated by socket
+[ ] Starting the job  /bin/ls -l time:1462209636
+[ ] process pid 17750
+total 2724
+-rwxrwxr-x 1 archangel archangel  171736 mai    2 00:12 client
+-rw-rw-r-- 1 archangel archangel   14395 avril 25 16:59 CMakeCache.txt
+drwxrwxr-x 8 archangel archangel    4096 mai    2 13:57 CMakeFiles
+-rw-rw-r-- 1 archangel archangel    1389 avril 25 16:59 cmake_install.cmake
+-rw-rw-r-- 1 archangel archangel    6812 mai    2 13:57 compile_commands.json
+-rw-rw-r-- 1 archangel archangel   19003 mai    2 13:57 Makefile
+-rwxrwxr-x 1 archangel archangel  171736 mai    2 13:57 schedclt
+-rwxrwxr-x 1 archangel archangel 1535048 mai    2 13:57 scheduler
+-rwxrwxr-x 1 archangel archangel  787064 mai    2 00:12 tests
+[ ] Stopping the job  /bin/ls -l (was running during 2 seconds)
+\end{verbatim}
+
+\paragraph{Multiple client handling}
+
+Our server/scheduler is capable of handling multiple client connections. However, it cannot receive jobs from multiple client at the same time. Each new connected client needs to wait for the current connected client to finish his transaction (by sending \texttt{q} to the server).
+
+Despite the fact that our server cannot receive multiple job strings at a time, a connected client can send his job anyway and it will be processed once it is his turn to send a job string.
+
+\clearpage
+
+\section{Conclusion}
+
+Among all strategy, we preferred to focus our strategy on the user needs and experience as we empirically know that a good application is the one loved by its users.
+
+\clearpage
+
+\bibliographystyle{plain}
+\bibliography{main}
+
+\newpage
+
+% ==============================================================================
+\end{document}
+% ==============================================================================
