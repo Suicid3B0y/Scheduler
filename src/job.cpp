@@ -1,6 +1,5 @@
 #include <unistd.h>
 #include <sys/wait.h>
-#include <stdarg.h>
 #include "job.h"
 
 static int jobIdValue = 0;  // FIXME: temporary work-around
@@ -20,7 +19,8 @@ Job::Job(string command_line, unsigned burst_time, int user_priority, unsigned c
           command_line{command_line},
           burst_time{burst_time},
           user_priority{user_priority},
-          cpu_load{cpu_load} {
+          cpu_load{cpu_load},
+          running_core{0} {
     jobId = jobIdValue;  // FIXME: temporary work-around
     jobIdValue++;
 }
@@ -33,7 +33,7 @@ Job &Job::operator=(const Job &other) {
     timestamp = other.timestamp;
     startTime = other.startTime;
     runningTime = other.runningTime;
-
+    running_core = other.running_core;
     return *this;
 }
 
@@ -69,6 +69,11 @@ int Job::getCPULoad() const
     return cpu_load;
 }
 
+int Job::getRunningCore() const
+{
+    return running_core;
+}
+
 time_t Job::getStartTime() const
 {
     return startTime;
@@ -76,18 +81,32 @@ time_t Job::getStartTime() const
 
 time_t Job::getRunningTime() const
 {
-    return runningTime;
+    if (startTime==0) {
+        return runningTime;
+    } else {
+        return runningTime+(time(nullptr)-startTime);
+    }
 }
 
-bool Job::start() {
+bool Job::start(int& cpu) {
     startTime = time(nullptr);
+    struct tm datetime;
+    char  format[32];
+    datetime = *localtime(&startTime);
+    strftime(format, 32, "%Y/%m/%d %H:%M", &datetime);
     if (runningTime == 0) {
-        debug("[ ] Starting the job " << command_line << " time:" << startTime << endl);
+        this->running_core = cpu;
+
+        debug("[>] Starting the job " << command_line << " time:" << format << " on CPU : " << cpu << endl);
         pid_t pid = fork();
 
         if (pid < 0) {
             exit(1);
         } else if (pid == 0) {
+            cpu_set_t set;
+            CPU_ZERO(&set);
+            CPU_SET(cpu, &set);
+            sched_setaffinity(getpid(), sizeof(set), &set);
             execlp("/bin/sh", "/bin/sh", "-c", command_line.c_str(), (char *)NULL);
             exit(0);
         } else {
@@ -95,7 +114,7 @@ bool Job::start() {
         }
         return true;
     } else { // Job déjà start
-        debug("[ ] Restarting the job " << command_line << " time:" << startTime << " already runned for:" << runningTime << endl);
+        debug("[=] Restarting the job " << command_line << " time:" << format << " already runned for:" << runningTime << endl);
         kill(this->jobPid, SIGCONT);
         return true;
     }
@@ -103,7 +122,7 @@ bool Job::start() {
 
 bool Job::stop() {
     runningTime += time(nullptr) - startTime;
-    debug("[ ] Stopping the job " << command_line << " (was running during "
+    debug("[<] Stopping the job " << command_line << " (was running during "
           << time(nullptr) - startTime << " seconds)" << endl);
     startTime = 0;
 

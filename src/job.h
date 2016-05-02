@@ -33,6 +33,7 @@ private:
     unsigned burst_time; /*!< Job's burst time ; user defined parameter */
     int user_priority; /*!< Job's priority defined by the user */
     unsigned cpu_load; /*!< Job's CPU load */
+    unsigned running_core; /*!< Job's Running Core. Core that the job is running on */
 
 public:
 
@@ -97,6 +98,11 @@ public:
     int getCPULoad() const;
 
     /**
+     * \brief Getter of the Job Running Core.
+     */
+    int getRunningCore() const;
+
+    /**
      * \brief Getter of the Job start time.
      */
     time_t getStartTime() const;
@@ -109,7 +115,7 @@ public:
     /**
      * \brief Start the job.
      */
-    bool start();
+    bool start(int& cpu);
 
     /**
      * \brief Stop the job.
