@@ -23,6 +23,11 @@ bool Scheduler::isAlive() {
     return alive;
 }
 
+void Scheduler::updateJobQueue(vector<Job>& newJobs)
+{
+    controller.updateJobQueue(newJobs);
+}
+
 int Scheduler::run() {
     while (isAlive()) {
         controller.updateRunningJobs();

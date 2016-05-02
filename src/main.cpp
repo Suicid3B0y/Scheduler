@@ -12,9 +12,9 @@ int main(int argc, char **argv) {
     unsigned time_slice;
     unsigned core_number;
     unsigned timeout;
-    unsigned burst_time;
-    int user_priority;
-    unsigned cpu_load;
+    //unsigned burst_time;
+    //int user_priority;
+    //unsigned cpu_load;
 
     po::options_description generic("Generic options");
     generic.add_options()
@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
             debug("Input file: " << input_filepath << endl);
 
             vector<Job> newJobs = Reader::parseFile(input_filepath);
-            scheduler.controller.updateJobQueue(newJobs);
+            scheduler.updateJobQueue(newJobs);
             scheduler.run();
 
         } else {
