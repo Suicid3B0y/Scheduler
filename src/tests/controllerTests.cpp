@@ -13,22 +13,22 @@ void testController() {
     queue.emplace(p_j3);
 
     Controller controller(queue, 1, 100);
-    
+
     vector<shared_ptr<Job>> runningJobs = controller.updateRunningJobs();  // Should start the job 2
     ASSERT(runningJobs.size() == 1);
-    ASSERT(runningJobs[0].get()->command_line == p_j2.get()->command_line);
-    ASSERT(runningJobs[0].get()->startTime != 0);
+    ASSERT(runningJobs[0].get()->getCommandLine() == p_j2.get()->getCommandLine());
+    ASSERT(runningJobs[0].get()->getStartTime() != 0);
 
     runningJobs = controller.updateRunningJobs();  // Should still have the job 2 started
-    ASSERT(runningJobs[0].get()->command_line == p_j2.get()->command_line);
-    ASSERT(runningJobs[0].get()->startTime != 0);
+    ASSERT(runningJobs[0].get()->getCommandLine() == p_j2.get()->getCommandLine());
+    ASSERT(runningJobs[0].get()->getStartTime() != 0);
 
     // Tell the job 2 is finished
     //p_j2.get()->isFinished = true;
 
     //runningJobs = controller.updateRunningJobs();  // Should start the job 3
-    //ASSERT(runningJobs[0].get()->command_line == p_j3.get()->command_line);
-    //ASSERT(runningJobs[0].get()->startTime != 0);
+    //ASSERT(runningJobs[0].get()->getCommandLine() == p_j3.get()->getCommandLine());
+    //ASSERT(runningJobs[0].get()->getStartTime() != 0);
 }
 
 

@@ -11,25 +11,48 @@
 #include "../socket/Socket.h"
 
 
+/**
+ * \class Server
+ * \brief Server handling the reception of a new job.
+ */
 class Server {
-private:
-    bool is_started;
-    bool alive;
+    private:
+        bool is_started;  /*!< Boolean indicating if the server is started. */
+        bool alive;  /*!< Boolean indicating if the server is alive. */
+        Scheduler &scheduler;  /*!< Scheduler on which we send the jobs */
+        std::thread listening_thread;  /*!< Listening thread */
 
-    void run();
+        /**
+         * \brief Target method of the running thread.
+         */
+        void run();
 
-    Scheduler &scheduler;
+        /**
+         * \brief Check if the thread is alive.
+         */
+        bool isAlive();
 
-    bool isAlive();
+        /**
+         * \brief Parse the string received through the socket.
+         */
+        bool parseSocketString(const std::string &line, std::string &result);
 
-    bool parseSocketString(const std::string &line, std::string &result);
+    public:
 
-public:
-    Server(Scheduler &scheduler);
+        /**
+         * \brief Constructor.
+         */
+        Server(Scheduler &scheduler);
 
-    std::thread listening_thread;
+        /**
+         * \brief Starts the server
+         */
+        void start();
 
-    void start();
+        /**
+         * \brief Join the current thread.
+         */
+        void join();
 };
 
 

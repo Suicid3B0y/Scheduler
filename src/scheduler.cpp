@@ -1,6 +1,8 @@
 #include "scheduler.h"
 
-Scheduler::Scheduler() : timeSlice(100), controller(Controller{}), alive{true}, is_started{false} { }
+Scheduler::Scheduler() : timeSlice(100), alive {true}, is_started{false}, controller(Controller{})
+{
+}
 
 Scheduler::Scheduler(const Scheduler &other) : Scheduler() {
     (*this) = other;
@@ -21,6 +23,11 @@ Scheduler &Scheduler::operator=(const Scheduler &other) {
 
 bool Scheduler::isAlive() {
     return alive;
+}
+
+void Scheduler::updateJobQueue(vector<Job>& newJobs)
+{
+    controller.updateJobQueue(newJobs);
 }
 
 int Scheduler::run() {
