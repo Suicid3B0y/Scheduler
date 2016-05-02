@@ -34,7 +34,7 @@ add_executable(scheduler
         src/job.cpp
         src/socket/Socket.cpp
         src/server/server.cpp)
-add_executable(client
+add_executable(schedclt
         src/client/client.cpp
         src/socket/Socket.cpp)
 add_executable(tests
@@ -51,7 +51,7 @@ add_executable(tests
         src/message_handler.cpp
         )
 target_link_libraries(scheduler ${Boost_LIBRARIES})
-target_link_libraries(client ${Boost_LIBRARIES})
+target_link_libraries(schedclt ${Boost_LIBRARIES})
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 
 set(CMAKE_CXX_FLAGS "-Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread")
