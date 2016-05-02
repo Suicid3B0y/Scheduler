@@ -7,26 +7,47 @@
 
 using namespace std;
 
+/**
+ * \class Scheduler
+ * \brief Class entirely managing the scheduler.
+ */
 class Scheduler {
 
-private:
-    unsigned timeSlice;
+    private:
+        unsigned timeSlice; /*!< Time at which the scheduler should update its jobs */
+        bool alive;  /*!< Check if the scheduler is alive. */
+        Controller controller;  /*!< Controller used for managing the jobs. */
 
-    bool alive;
+    public:
+        /**
+         * \brief Constructor.
+         */
+        Scheduler();
 
-public:
-    Controller controller;
-    Scheduler();
+        /**
+         * \brief Copy constructor.
+         */
+        Scheduler(const Scheduler &other);
 
-    Scheduler(const Scheduler &other);
+        /**
+         * \brief Full constructor.
+         */
+        Scheduler(unsigned core_number, unsigned timeout, unsigned timeSlice);
 
-    Scheduler(unsigned core_number, unsigned timeout, unsigned timeSlice);
+        /**
+         * \brief Assignment operator
+         */
+        Scheduler &operator=(const Scheduler &other);
 
-    Scheduler &operator=(const Scheduler &other);
+        /**
+         * \brief Check if the scheduler is currently working.
+         */
+        bool isAlive();
 
-    bool isAlive();
-
-    int run();
+        /**
+         * \brief Starts the scheduler.
+         */
+        int run();
 };
 
 #endif
