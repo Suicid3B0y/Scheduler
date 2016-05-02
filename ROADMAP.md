@@ -3,8 +3,8 @@
 
 # Sequentiel
 
-- Créer un daemon capable de gérer automatiquement les travaux à lancer
-- Créer un client capable d'ajouter un travail au daemon
+- ~~Créer un daemon capable de gérer automatiquement les travaux à lancer~~
+- ~~Créer un client capable d'ajouter un travail au daemon~~
 - ~~Créer une liste priorisé de travaux~~
 - Binder un travail à un coeur spécifique
 - Gérer la répartition des travaux par %age d'affinité à un coeur
