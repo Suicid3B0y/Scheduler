@@ -1,6 +1,8 @@
 #include "server.h"
 
-Server::Server(Scheduler &scheduler) : scheduler{scheduler}, alive{true} { }
+Server::Server(Scheduler &scheduler) : is_started{false}, alive{true}, scheduler{scheduler}
+{
+}
 
 void Server::run() {
     std::string line;
@@ -93,4 +95,9 @@ void Server::start() {
 
 bool Server::isAlive() {
     return alive;
+}
+
+void Server::join()
+{
+    listening_thread.join();
 }
