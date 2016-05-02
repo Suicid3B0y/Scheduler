@@ -18,7 +18,7 @@ class FakeServer {
         Socket server;  /*!< Listening server socket */
         Socket client_socket;  /*!< Remote socket */
         unsigned port;  /*!< Listening port */
-        thread t;  /*!< Listening thread */
+        std::thread t;  /*!< Listening thread */
 
     public:
         /**

@@ -8,6 +8,7 @@
 #include <thread>
 #include "../job.h"
 #include "../reader.h"
+#include "../scheduler.h"
 #include "../socket/Socket.h"
 
 

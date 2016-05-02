@@ -5,10 +5,13 @@
 #ifndef GSI_SCHEDULER_CONSTANTS_H
 #define GSI_SCHEDULER_CONSTANTS_H
 
+#include <iostream>
+
 /**
  * Project constants definition
  */
 #define DEBUG 1
+#define DEFAULT_PORT 3636
 
 /* Job constants */
 #define DEFAULT_USER_PRIORITY 0

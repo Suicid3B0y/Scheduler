@@ -42,7 +42,7 @@ void Server::run() {
                                 /* Adding new job to queue */
                                 Job newJob = Reader::parseString(jobStr);
                                 vector<Job> newJob2 = {newJob};
-                                scheduler.controller.updateJobQueue(newJob2);
+                                scheduler.updateJobQueue(newJob2);
 
                                 debug("[ ] Jobs updated by socket" << std::endl);
                                 clientSockets[clientSockets.size() - 1].send("[+] Job added to queue");

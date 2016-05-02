@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "constants.h"
+#include "controller.h"
 
 
 #define DEFAULT_MESSAGE_HANDLER_CLASS MessageHandler
@@ -14,7 +15,7 @@
  */
 class BaseMessage
 {
-    private:
+    protected:
         int opcode;  /*!< Operation code associated to the message. */
         std::string payload;  /*!< Payload of the message (arguments for example). */
 
@@ -35,6 +36,11 @@ class BaseMessage
         explicit BaseMessage(const std::string raw_message);
 
         /**
+         * \brief Destructor
+         */
+        virtual ~BaseMessage();
+
+        /**
          * \brief Construct the message from an opcode and a payload.
          */
         BaseMessage(const unsigned char opcode, const std::string payload);
@@ -48,6 +54,26 @@ class BaseMessage
          * \brief Load the class attributes from a string.
          */
         void load_from_string(const std::string message);
+
+        /**
+         * \brief Getter of the payload
+         */
+        std::string getPayload();
+
+        /**
+         * \brief Get the opcode
+         */
+        int getOpCode();
+
+        /**
+         * \brief Run for the scheduler.
+         */
+        virtual void run();
+
+        /**
+         * \brief Run for the client.
+         */
+        virtual void client_run();
 
         /**
          * \brief Get the message length.
@@ -67,21 +93,33 @@ class BaseMessage
 
 
 /**
+ * \class JobAppendMessage
+ * \brief Message sent when a client want to append a new job.
+ */
+class JobAppendMessage: public BaseMessage
+{
+    public:
+        JobAppendMessage(BaseMessage &message);
+        JobAppendMessage(int user_priority, unsigned cpu_load, unsigned burst_time, std::string command_line);
+        virtual void run(Controller &controller);
+};
+
+
+/**
  * \class MessageHandler
  * \brief Handle the message received through network entities.
  */
 class MessageHandler
 {
+    private:
+        Controller &controller;
+
     public:
+        MessageHandler();
         /**
          * \brief Constructor.
          */
-        MessageHandler();
-
-        /**
-         * \brief Destructor.
-         */
-        virtual ~MessageHandler();
+        MessageHandler(Controller &controller);
 
         /**
          * \brief Copy constructor.

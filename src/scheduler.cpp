@@ -1,15 +1,18 @@
 #include "scheduler.h"
 
-Scheduler::Scheduler() : timeSlice(100), alive {true}, is_started{false}, controller(Controller{})
+Scheduler::Scheduler() : timeSlice(100), alive {true}, is_started{false}, controller(Controller{}), handler{controller}, server{NetworkServer{DEFAULT_PORT, handler}}
 {
+    server.start();
 }
 
 Scheduler::Scheduler(const Scheduler &other) : Scheduler() {
     (*this) = other;
 }
 
-Scheduler::Scheduler(unsigned core_number, unsigned timeout, unsigned timeSlice) : timeSlice(timeSlice), alive{true}, is_started{false} {
+Scheduler::Scheduler(unsigned core_number, unsigned timeout, unsigned timeSlice): Scheduler()
+{
     debug("[ ] Scheduler instantiation" << endl);
+    this->timeSlice = timeSlice;
     JobQueue job_queue;
     Controller controller(job_queue, core_number, timeout);
     this->controller = controller;
@@ -44,4 +47,8 @@ void Scheduler::start() {
     std::thread tmp(&Scheduler::run, this);
     listening_thread = std::move(tmp);
     is_started = true;
+}
+
+void Scheduler::join() {
+    listening_thread.join();
 }

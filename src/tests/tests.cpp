@@ -6,5 +6,5 @@ int main() {
     runJobQueueSuite();
     runControllerSuite();
     runSocketSuite();
-    runNetworkSuite();
+    //runNetworkSuite();
 }

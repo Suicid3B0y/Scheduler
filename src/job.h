@@ -42,6 +42,11 @@ public:
     Job();
 
     /**
+     * \brief Contructor ; decode a serialized job.
+     */
+    explicit Job(string serializedJob);
+
+    /**
      * \brief Job short instantiation, using default user priority and default cpu_load.
      */
     Job(string command_line, unsigned burst_time);

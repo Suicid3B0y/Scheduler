@@ -5,7 +5,30 @@
 
 static int jobIdValue = 0;  // FIXME: temporary work-around
 
+string getPart(unsigned &index, string data) {
+    string result = "";
+
+    while (data[index] != '|') {
+        result += data[index];
+        ++index;
+    }
+
+    ++index;
+    return result;
+}
+
 Job::Job() : Job("", 0) {
+}
+
+Job::Job(string serializedJob): Job()
+{
+    std::string tmp = "";
+    unsigned index = 0;
+
+    user_priority = std::stoi(getPart(index, serializedJob));
+    cpu_load = std::stoi(getPart(index, serializedJob));
+    burst_time = std::stoi(getPart(index, serializedJob));
+    command_line = serializedJob.substr(index);
 }
 
 Job::Job(string command_line, unsigned burst_time)

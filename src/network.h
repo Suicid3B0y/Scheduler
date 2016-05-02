@@ -57,7 +57,7 @@
 #include <list>
 #include <vector>
 
-#include "scheduler.h"
+#include "constants.h"
 #include "message_handler.h"
 #include "socket/Socket.h"
 
@@ -78,7 +78,7 @@ class NetworkEntity
 {
     private:
         Socket socket;  /*!< Socket handling the connection. */
-        MessageHandler handler;  /*!< Message handler used if a message is received from the remote endpoint. */
+        MessageHandler &handler;  /*!< Message handler used if a message is received from the remote endpoint. */
         std::string endpoint_addr;  /*!< Remote (or local) endpoint address. */
         unsigned port;  /*!< Remote (or local) endpoint port. */
 
@@ -133,6 +133,8 @@ class NetworkEntity
          */
         ~NetworkEntity();
 
+        void bind_handler(MessageHandler &handler);
+
         /**
          * \brief Comparison operator.
          */
@@ -172,6 +174,21 @@ class NetworkEntity
 };
 
 
+class Client
+{
+
+    private:
+        Socket socket;
+
+    public:
+        Client(std::string endpoint_addr, unsigned port);
+
+        void sendJob(JobAppendMessage message);;
+
+        void close();
+};
+
+
 /**
  * \class NetworkServer
  * \brief Instantiate a server that listen for new connections.
@@ -184,7 +201,7 @@ class NetworkServer
     private:
         Socket server;  /*!< Server socket listening for new connections */
         std::vector< std::unique_ptr<NetworkEntity> > clients;  /*!< Vector containing all currently connected clients */
-        MessageHandler handler;  /*!< Message handler used once a new message is received, passed to all sub NetworkEntity */
+        MessageHandler &handler;  /*!< Message handler used once a new message is received, passed to all sub NetworkEntity */
         bool is_alive;  /*!< Boolean indicating wether the thread is started or not */
         std::thread accept_thread;  /*!< Thread accepting new connections */
 

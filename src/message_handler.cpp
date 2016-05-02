@@ -13,6 +13,10 @@ BaseMessage::BaseMessage(const std::string raw_message): BaseMessage(raw_message
 {
 }
 
+BaseMessage::~BaseMessage()
+{
+}
+
 BaseMessage::BaseMessage(const unsigned char opcode, const std::string payload): opcode{opcode}, payload{payload}
 {
 }
@@ -49,22 +53,65 @@ std::string BaseMessage::encoded_message_length() const
     return std::string(packed, packed + 4);
 }
 
+std::string BaseMessage::getPayload()
+{
+    return payload;
+}
+
+int BaseMessage::getOpCode()
+{
+    return opcode;
+}
+
 BaseMessage::operator const std::string() const {
     return std::string(1, opcode) + payload;
 }
 
+void BaseMessage::run()
+{
+}
+
+void BaseMessage::client_run()
+{
+}
+
 // ----------------------------------------------------------------------------
 
-MessageHandler::MessageHandler()
+JobAppendMessage::JobAppendMessage(BaseMessage &message)
 {
+    opcode = message.getOpCode();
+    payload = message.getPayload();
 }
 
-MessageHandler::~MessageHandler()
+JobAppendMessage::JobAppendMessage(int user_priority, unsigned cpu_load, unsigned burst_time, std::string command_line)
 {
+    opcode = 1;
+    payload = std::to_string(user_priority) + "|" + std::to_string(cpu_load) + "|" + std::to_string(burst_time) + "|" + command_line;
 }
 
-MessageHandler::MessageHandler(const MessageHandler &handler)
+void JobAppendMessage::run(Controller &controller)
 {
+    debug("A new job has been received. Appending to the queue." << std::endl);
+    Job j{payload};
+    std::vector<Job> vjob{j};
+    controller.updateJobQueue(vjob);
+}
+
+// ----------------------------------------------------------------------------
+
+MessageHandler::MessageHandler(): controller{*(new Controller{})}
+{
+    debug("Message handler instantiation" << std::endl);;
+}
+
+MessageHandler::MessageHandler(Controller &controller): controller{controller}
+{
+    debug("Constructor by controller assign" << std::endl);
+}
+
+MessageHandler::MessageHandler(const MessageHandler &handler): controller{handler.controller}
+{
+    debug("Test ?" << std::endl);
 }
 
 MessageHandler& MessageHandler::operator=(const MessageHandler &handler)
@@ -74,5 +121,12 @@ MessageHandler& MessageHandler::operator=(const MessageHandler &handler)
 
 void MessageHandler::handle_message(BaseMessage message)
 {
-    debug("Handling message !" << std::endl);
+    switch (message.getOpCode()) {
+        case 1:
+            ((JobAppendMessage)message).run(controller);
+            break;
+        default:
+            debug("Invalid message !" << std::endl);
+            break;
+    }
 }

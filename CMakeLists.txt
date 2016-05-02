@@ -33,16 +33,21 @@ add_executable(scheduler
         src/reader.cpp
         src/job.cpp
         src/socket/Socket.cpp
-        src/server/server.cpp)
+        src/server/server.cpp
+        src/network.cpp
+        src/message_handler.cpp)
 add_executable(client
         src/client/client.cpp
-        src/socket/Socket.cpp)
+        src/socket/Socket.cpp
+        src/network.cpp
+        src/message_handler.cpp
+        src/controller.cpp
+        src/job.cpp)
 add_executable(tests
         src/controller.cpp
         src/tests/tests.cpp
         src/tests/jobTests.cpp
         src/tests/controllerTests.cpp
-        src/tests/networkTests.cpp
         src/tests/socketTests.cpp
         src/socket/Socket.cpp
         src/job.cpp

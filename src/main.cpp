@@ -48,16 +48,16 @@ int main(int argc, char **argv) {
     if (vm.count("input-file")) {
         debug("Input file: " << input_filepath << endl);
         vector<Job> newJobs = Reader::parseFile(input_filepath);
-        scheduler.controller.updateJobQueue(newJobs);
+        scheduler.updateJobQueue(newJobs);
     }
 
     scheduler.start();
 
-    Server server{scheduler};
-    server.start();
+    //Server server{scheduler};
+    //server.start();
 
-    scheduler.listening_thread.join();
-    server.join();
+    scheduler.join();
+    //server.join();
 
     return 0;
 }

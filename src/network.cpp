@@ -17,7 +17,7 @@
 #include "network.h"
 
 NetworkEntity::NetworkEntity() :
-        socket{}, handler{},
+        socket{}, handler{*(new MessageHandler())},
         endpoint_addr{MY_HOST}, port{},
         local_buffer{}, is_started{false}
 {
@@ -34,6 +34,11 @@ NetworkEntity::~NetworkEntity()
         is_started = false;
         listening_thread.join();
     }
+}
+
+void NetworkEntity::bind_handler(MessageHandler &handler)
+{
+    this->handler = handler;
 }
 
 NetworkEntity& NetworkEntity::operator=(const NetworkEntity &entity)
@@ -147,6 +152,22 @@ NetworkEntity& operator<<(NetworkEntity &output_entity, const BaseMessage &messa
 {
     output_entity.socket << message.encoded_message_length() << message;
     return output_entity;
+}
+
+// ----------------------------------------------------------------------------
+
+Client::Client(std::string endpoint_addr, unsigned port): socket{endpoint_addr, port}
+{
+}
+
+void Client::sendJob(JobAppendMessage message)
+{
+    socket << message.encoded_message_length() << (std::string)message;
+}
+
+void Client::close()
+{
+    socket.close();
 }
 
 // ----------------------------------------------------------------------------

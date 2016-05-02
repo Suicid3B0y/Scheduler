@@ -1,6 +1,8 @@
 #include "controller.h"
 
-Controller::Controller() : Controller(JobQueue{}, 1, 200) { }
+Controller::Controller() : Controller(JobQueue{}, 1, 200)
+{
+}
 
 Controller::Controller(const Controller &other) : Controller() {
     (*this) = other;
@@ -30,6 +32,8 @@ vector<shared_ptr<Job> > Controller::updateRunningJobs() {
             jobQueue.push(tmp);
         }
     }
+
+    debug("Job queue size : " << jobQueue.size() << std::endl);
 
     if (jobQueue.size() != 0) {
         for (unsigned int i = 0; i < coreNumber; ++i) {

@@ -15,7 +15,7 @@
  */
 class SimpleEchoServer {
     private:
-        thread listening_thread;  /*!< Thread listening for new connection. */
+        std::thread listening_thread;  /*!< Thread listening for new connection. */
         Socket socket;  /*!< Server socket listening for new connection. */
         bool has_client;  /*!< Checks wether the server has a client or not */
 
