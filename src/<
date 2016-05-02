@@ -137,10 +137,6 @@ typedef shared_ptr<Job> job_ptr;
  * NOTE: a job CANNOT be equal to another. Then j1 > j2 == !(j1 < j2)
  */
 struct JobPtrOrder {
-
-    /**
-     * \brief Operator used to sort two jobs.
-     */
     bool operator()(job_ptr const &left, job_ptr const &right) const;
 };
 
