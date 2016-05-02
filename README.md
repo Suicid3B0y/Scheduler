@@ -3,6 +3,8 @@
 
 ## Compilation
 
+This project requires Boost Library 1.58.
+
 To compile our project, please follow this indications :
 
     $ mkdir build && cd build
@@ -23,7 +25,7 @@ To launch our client, you need to have our scheduler runnning and issue the foll
 
     $ ./client
 
-_Note : our server/scheduler is capable of handling multiple client connections. However, it cannot receive jobs from multiple client at the same time. Each new connected client needs to wait for the current connected client to finish his transaction (by sending **q** to the server)._
+_Note : our server/scheduler is capable of handling multiple client connections.
 
 ## Repository workflow
 #### Hint 
