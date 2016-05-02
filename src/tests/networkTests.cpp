@@ -3,6 +3,23 @@
 
 using namespace std;
 
+FakeServer::FakeServer(unsigned port): server{Socket{}}, client_socket{Socket{}}, port{port}, t{}
+{
+    server.bind_to(port);
+    thread subt(&FakeServer::handle_acceptance, this);
+    t = std::move(subt);
+}
+
+void FakeServer::handle_acceptance()
+{
+    server.accept(client_socket);
+}
+
+Socket FakeServer::get_remote()
+{
+    t.join();
+    return client_socket;
+}
 
 void testNetworkServer()
 {
@@ -28,37 +45,6 @@ void testNetworkServer()
 
     serv.stop();
 }
-
-
-// Fake server listener for testing the NetworkEntity class without using the NetworkServer class
-class FakeServer
-{
-    private:
-        Socket server;
-        Socket client_socket;
-        unsigned port;
-        thread t;
-
-    public:
-        FakeServer(unsigned port): server{Socket{}}, client_socket{Socket{}}, t{}, port{port}
-        {
-            server.bind_to(port);
-            thread subt(&FakeServer::handle_acceptance, this);
-            t = std::move(subt);
-        }
-
-        void handle_acceptance()
-        {
-            server.accept(client_socket);
-        }
-
-        Socket get_remote()
-        {
-            t.join();
-            return client_socket;
-        }
-
-};
 
 void testNetworkEntityManipulations() {
     FakeServer serv{4250};
