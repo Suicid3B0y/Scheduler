@@ -6,10 +6,33 @@
 #define GSI_SCHEDULER_SERVER_H
 
 #include <thread>
+#include <chrono>
 #include "../job.h"
 #include "../reader.h"
 #include "../socket/Socket.h"
 
+
+class ClientHandler {
+    private:
+        bool is_alive;
+        Socket socket;
+        Scheduler &scheduler;
+        std::thread listening_thread;
+
+        void handle_client();
+        void handle_reception();
+
+        /**
+         * \brief Parse the string received through the socket.
+         */
+        bool parseSocketString(const std::string &line, std::string &result);
+
+    public:
+        ClientHandler(const Socket socket, Scheduler &scheduler);
+
+        void start();
+        void stop();
+};
 
 /**
  * \class Server
@@ -17,25 +40,16 @@
  */
 class Server {
     private:
-        bool is_started;  /*!< Boolean indicating if the server is started. */
-        bool alive;  /*!< Boolean indicating if the server is alive. */
+        bool is_alive;
+        Socket socket;
         Scheduler &scheduler;  /*!< Scheduler on which we send the jobs */
+        std::vector< std::unique_ptr<ClientHandler> > clients;
         std::thread listening_thread;  /*!< Listening thread */
 
         /**
-         * \brief Target method of the running thread.
+         * \brief handler for acceptance
          */
-        void run();
-
-        /**
-         * \brief Check if the thread is alive.
-         */
-        bool isAlive();
-
-        /**
-         * \brief Parse the string received through the socket.
-         */
-        bool parseSocketString(const std::string &line, std::string &result);
+        void handle_accept();
 
     public:
 
@@ -52,7 +66,7 @@ class Server {
         /**
          * \brief Join the current thread.
          */
-        void join();
+        void stop();
 };
 
 
