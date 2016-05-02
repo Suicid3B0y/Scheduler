@@ -3,49 +3,45 @@
 
 using namespace std;
 
-class SimpleEchoServer
+SimpleEchoServer::SimpleEchoServer(unsigned port): socket{}, has_client{false}
 {
-    private:
-        thread listening_thread;
-        Socket socket;
-        bool has_client;
+    socket.bind_to(port);
 
-    public:
-        SimpleEchoServer(unsigned port): socket{}, has_client{false} {
-            socket.bind_to(port);
+    thread t(&SimpleEchoServer::unique_handling, this);
+    listening_thread = move(t);
+}
 
-            thread t(&SimpleEchoServer::unique_handling, this);
-            listening_thread = move(t);
-        }
+bool SimpleEchoServer::is_connected()
+{
+    return has_client;
+}
 
-        bool is_connected() {
-            return has_client;
-        }
+void SimpleEchoServer::unique_handling()
+{
+    Socket client;
+    socket.accept(client);
+    has_client = true;
 
-        void unique_handling() {
-            Socket client;
-            socket.accept(client);
-            has_client = true;
+    while (1) {
+        string message;
+        client.recv(message);
 
-            while (1) {
-                string message;
-                client.recv(message);
+        if (message == "\0")
+            break;
 
-                if (message == "\0")
-                    break;
+        client.send(message);
+    }
 
-                client.send(message);
-            }
+    client.close();
+    socket.close();
+}
 
-            client.close();
-            socket.close();
-        }
+void SimpleEchoServer::join()
+{
+    listening_thread.join();
+}
 
-        void join()
-        {
-            listening_thread.join();
-        }
-};
+/* Tests */
 
 void testTransmission()
 {
