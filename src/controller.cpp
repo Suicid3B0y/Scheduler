@@ -11,7 +11,7 @@ Controller::Controller(JobQueue jobQueue, unsigned coreNumber, unsigned timeout)
                                                                                    coreNumber(coreNumber),
                                                                                    timeout(timeout) {
     currentJobs = vector<job_ptr>();
-    debug("[ ] Controller instantiation" << endl);
+    //debug("[ ] Controller instantiation" << endl);
 }
 
 Controller &Controller::operator=(const Controller &other) {
@@ -55,8 +55,7 @@ vector<shared_ptr<Job> > Controller::updateRunningJobs() {
             if (cpu != -1) {
                 coreLoad[cpu] += queue_top.get()->getCPULoad();
                 queue_top.get()->start(cpu);
-                debug("[ ] process pid " << queue_top.get()->getPid() << " running on CPU:" << cpu << " for " <<
-                      queue_top.get()->getCommandLine() << endl);
+                //debug("[ ] process pid " << queue_top.get()->getPid() << " running on CPU:" << cpu << " for " << queue_top.get()->getCommandLine() << endl);
 
                 jobQueue.pop();
             } else {
@@ -74,7 +73,7 @@ vector<shared_ptr<Job> > Controller::updateRunningJobs() {
         }
         if (!found) {
             currentJobs[i].get()->stop();
-            debug(endl);
+            //debug(endl);
         }
     }
     currentJobs = newJobs;
@@ -104,6 +103,6 @@ void Controller::updateJobQueue(vector<Job>& newJobs) {
         //debug("[-] 2 " << job.getCommandLine() << endl);
     }
 
-    debug("[-] JobQueue top " << jobQueue.top()->getCommandLine() << endl);
-    debug("[-] JobQueue size " << jobQueue.size() << endl);
+    //debug("[-] JobQueue top " << jobQueue.top()->getCommandLine() << endl);
+    //debug("[-] JobQueue size " << jobQueue.size() << endl);
 }
