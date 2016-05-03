@@ -37,8 +37,8 @@ vector<shared_ptr<Job> > Controller::updateRunningJobs() {
             jobQueue.push(tmp);
         }
     }
-
-    while ((jobQueue.size()!=0) && getAffinity(coreLoad,jobQueue.top().get()->getCPULoad()) != -1) {
+    bool overload = false;
+    while (jobQueue.size()!=0 && !overload) {
         job_ptr queue_top = jobQueue.top();
         if (timeout!=0 && queue_top->getRunningTime() >= timeout) {
             debug("[!] process " << queue_top.get()->getCommandLine() << " timeout stop" << endl);
@@ -46,24 +46,37 @@ vector<shared_ptr<Job> > Controller::updateRunningJobs() {
         } else {
             newJobs.push_back(queue_top);
         }
-
-        if (find(currentJobs.begin(), currentJobs.end(), queue_top) == currentJobs.end()) {
-            int cpu = getAffinity(coreLoad, queue_top.get()->getCPULoad());
-            coreLoad[cpu] += queue_top.get()->getCPULoad();
-            queue_top.get()->start(cpu);
-            debug("[ ] process pid " << queue_top.get()->getPid() << " running on CPU:" << cpu << " for " << queue_top.get()->getCommandLine() << endl);
+        bool found = false;
+        for(unsigned int j = 0; j < currentJobs.size(); ++j) {
+            found = found || currentJobs[j]==queue_top;
         }
+        if (!found) {
+            int cpu = getAffinity(coreLoad, queue_top.get()->getCPULoad());
+            if (cpu != -1) {
+                coreLoad[cpu] += queue_top.get()->getCPULoad();
+                queue_top.get()->start(cpu);
+                debug("[ ] process pid " << queue_top.get()->getPid() << " running on CPU:" << cpu << " for " <<
+                      queue_top.get()->getCommandLine() << endl);
 
-        jobQueue.pop();
+                jobQueue.pop();
+            } else {
+                overload = true;
+                newJobs.pop_back();
+            }
+        } else {
+            jobQueue.pop();
+        }
     }
-
     for (unsigned int i = 0; i < currentJobs.size(); ++i) {
-        if (!(find(newJobs.begin(), newJobs.end(), currentJobs[i]) != newJobs.end())) {
+        bool found = false;
+        for(unsigned int j = 0; j < newJobs.size(); ++j) {
+            found = found || currentJobs[i]==newJobs[j];
+        }
+        if (!found) {
             currentJobs[i].get()->stop();
             debug(endl);
         }
     }
-
     currentJobs = newJobs;
 
     return newJobs;

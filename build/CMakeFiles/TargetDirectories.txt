@@ -1,0 +1,5 @@
+/data/Projets/projet-gsi/build/CMakeFiles/schedclt.dir
+/data/Projets/projet-gsi/build/CMakeFiles/edit_cache.dir
+/data/Projets/projet-gsi/build/CMakeFiles/scheduler.dir
+/data/Projets/projet-gsi/build/CMakeFiles/tests.dir
+/data/Projets/projet-gsi/build/CMakeFiles/rebuild_cache.dir

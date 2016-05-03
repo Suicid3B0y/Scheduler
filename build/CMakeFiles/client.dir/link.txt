@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   CMakeFiles/client.dir/src/client/client.cpp.o CMakeFiles/client.dir/src/socket/Socket.cpp.o  -o client  -L/usr/include -rdynamic -lboost_system -lboost_program_options -lboost_regex -Wl,-rpath,/usr/include 
