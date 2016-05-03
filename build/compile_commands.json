@@ -1,0 +1,97 @@
+[
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/schedclt.dir/src/client/client.cpp.o -c /data/Projets/projet-gsi/src/client/client.cpp",
+  "file": "/data/Projets/projet-gsi/src/client/client.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/schedclt.dir/src/socket/Socket.cpp.o -c /data/Projets/projet-gsi/src/socket/Socket.cpp",
+  "file": "/data/Projets/projet-gsi/src/socket/Socket.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/scheduler.dir/src/main.cpp.o -c /data/Projets/projet-gsi/src/main.cpp",
+  "file": "/data/Projets/projet-gsi/src/main.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/scheduler.dir/src/scheduler.cpp.o -c /data/Projets/projet-gsi/src/scheduler.cpp",
+  "file": "/data/Projets/projet-gsi/src/scheduler.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/scheduler.dir/src/controller.cpp.o -c /data/Projets/projet-gsi/src/controller.cpp",
+  "file": "/data/Projets/projet-gsi/src/controller.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/scheduler.dir/src/reader.cpp.o -c /data/Projets/projet-gsi/src/reader.cpp",
+  "file": "/data/Projets/projet-gsi/src/reader.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/scheduler.dir/src/job.cpp.o -c /data/Projets/projet-gsi/src/job.cpp",
+  "file": "/data/Projets/projet-gsi/src/job.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/scheduler.dir/src/socket/Socket.cpp.o -c /data/Projets/projet-gsi/src/socket/Socket.cpp",
+  "file": "/data/Projets/projet-gsi/src/socket/Socket.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/scheduler.dir/src/server/server.cpp.o -c /data/Projets/projet-gsi/src/server/server.cpp",
+  "file": "/data/Projets/projet-gsi/src/server/server.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/tests.dir/src/controller.cpp.o -c /data/Projets/projet-gsi/src/controller.cpp",
+  "file": "/data/Projets/projet-gsi/src/controller.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/tests.dir/src/tests/tests.cpp.o -c /data/Projets/projet-gsi/src/tests/tests.cpp",
+  "file": "/data/Projets/projet-gsi/src/tests/tests.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/tests.dir/src/tests/jobTests.cpp.o -c /data/Projets/projet-gsi/src/tests/jobTests.cpp",
+  "file": "/data/Projets/projet-gsi/src/tests/jobTests.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/tests.dir/src/tests/controllerTests.cpp.o -c /data/Projets/projet-gsi/src/tests/controllerTests.cpp",
+  "file": "/data/Projets/projet-gsi/src/tests/controllerTests.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/tests.dir/src/tests/networkTests.cpp.o -c /data/Projets/projet-gsi/src/tests/networkTests.cpp",
+  "file": "/data/Projets/projet-gsi/src/tests/networkTests.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/tests.dir/src/tests/socketTests.cpp.o -c /data/Projets/projet-gsi/src/tests/socketTests.cpp",
+  "file": "/data/Projets/projet-gsi/src/tests/socketTests.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/tests.dir/src/socket/Socket.cpp.o -c /data/Projets/projet-gsi/src/socket/Socket.cpp",
+  "file": "/data/Projets/projet-gsi/src/socket/Socket.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/tests.dir/src/job.cpp.o -c /data/Projets/projet-gsi/src/job.cpp",
+  "file": "/data/Projets/projet-gsi/src/job.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/tests.dir/src/network.cpp.o -c /data/Projets/projet-gsi/src/network.cpp",
+  "file": "/data/Projets/projet-gsi/src/network.cpp"
+},
+{
+  "directory": "/data/Projets/projet-gsi/build",
+  "command": "/usr/bin/c++     -Wall -std=c++14 -DBOOST_SYSTEM_NO_DEPRECATED -lboost_system -lpthread -pthread   -o CMakeFiles/tests.dir/src/message_handler.cpp.o -c /data/Projets/projet-gsi/src/message_handler.cpp",
+  "file": "/data/Projets/projet-gsi/src/message_handler.cpp"
+}
+]
