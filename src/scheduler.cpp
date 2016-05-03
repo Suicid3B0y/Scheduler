@@ -9,7 +9,7 @@ Scheduler::Scheduler(const Scheduler &other) : Scheduler() {
 }
 
 Scheduler::Scheduler(unsigned core_number, unsigned timeout, unsigned timeSlice) : timeSlice(timeSlice), alive{true}, is_started{false} {
-    debug("[ ] Scheduler instantiation" << endl);
+    //debug("[ ] Scheduler instantiation" << endl);
     JobQueue job_queue;
     Controller controller(job_queue, core_number, timeout);
     this->controller = controller;
