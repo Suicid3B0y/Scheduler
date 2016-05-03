@@ -139,14 +139,11 @@ bool Job::isFinished() const {
 }
 
 bool JobPtrOrder::operator()(job_ptr const &left, job_ptr const &right) const {
-    if (left->user_priority != right->user_priority) {
-        return left->user_priority < right->user_priority;
+    if (left->getUserPriority() != right->getUserPriority()) {
+        return left->getUserPriority() < right->getUserPriority();
     }
 
-    std::time_t current_timestamp = std::time(nullptr);
-
-    float l_burst_time = left->burst_time / (current_timestamp - left->timestamp + 1);
-    float r_burst_time = right->burst_time / (current_timestamp - right->timestamp + 1);
-
-    return (l_burst_time > r_burst_time);
+    float l_burst_time = left->getBurstTime() / (left->getRunningTime() + 1);
+    float r_burst_time = right->getBurstTime() / (right->getRunningTime() + 1);
+    return (l_burst_time < r_burst_time);
 }
