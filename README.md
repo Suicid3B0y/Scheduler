@@ -41,7 +41,7 @@ Don't forget to change your default behavior for the `git pull`, because with th
 
 There is a default backup repository on GitHub, you can add it by running this :
 
-`$ git remote add backup git@github.com:Suicid3B0y/Scheduler.git`
+`$ git remote add backup git@github.com:viAtom/Scheduler.git`
 
 #### Switch working branch
 `$ git checkout branch_name`
